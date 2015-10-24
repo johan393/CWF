@@ -42,8 +42,8 @@ public class Center extends javax.swing.JPanel implements ActionListener{
     int iposx[];
     int iposy[];
     
-    Timer t;
-    Timer s;
+    Timer t;//animates card moving from hand to middle
+    Timer s;//animates from center to pile
     
     int ox;
     int oy;
@@ -67,7 +67,7 @@ public class Center extends javax.swing.JPanel implements ActionListener{
             
         public void actionPerformed(ActionEvent e) { 
             if(!t.isRunning()){
-              if(Math.abs((x)-iposx[player])<10&&Math.abs((y)-iposy[player])<10){
+              if(Math.abs((x)-iposx[player])<5&&Math.abs((y)-iposy[player])<5){
                 animatedCard=null;
                 s.stop();
                 repaint();
@@ -95,13 +95,13 @@ public class Center extends javax.swing.JPanel implements ActionListener{
         x=iposx[position];
         y=iposy[position];
         
-        dx=(posx[position]-x)/40;
-        dy=(posy[position]-y)/40;
+        dx=(posx[position]-x)/70;
+        dy=(posy[position]-y)/70;
         animatedCard=Toolkit.getDefaultToolkit().getImage(card.loc);
         acard=card;
         acard.setCard('p');
         player=position;
-        t.start();
+        t.start();//animates card moving from hand to middle
         
     }
     
@@ -137,18 +137,18 @@ public class Center extends javax.swing.JPanel implements ActionListener{
         x=ox-40;
         y=oy-60;
       
-        dx=(iposx[position]-x)/40;
-        dy=(iposy[position]-y)/40;
+        dx=(iposx[position]-x)/70;
+        dy=(iposy[position]-y)/70;
         player=position;
         this.removeAll();
-        s.start();
+        s.start();//animates from center to pile
     }
         
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         if(animatedCard!=null){
-            g.drawImage(animatedCard, (int)x, (int)y, 80,120, null);
+            g.drawImage(animatedCard, (int)x, (int)y, 80,120, null);//type cast here is literally just a simpler rounding function
         }
     }
 

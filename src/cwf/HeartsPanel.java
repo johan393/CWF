@@ -66,17 +66,8 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         this.setVisible(true);
         System.out.println("dd");
         System.out.println(center.getWidth());
+     
         
-        s=new Timer(600,new ActionListener() {
-        public void actionPerformed(ActionEvent e) { 
-            
-        }});
-        
-        r=new Timer(500,new ActionListener() {
-        public void actionPerformed(ActionEvent e) { 
- 
-        }});
-
         t=new Timer(800,this);
         
         
@@ -115,8 +106,8 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
    public void setCardListeners(){
        ActionListener e = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if(person==0&&!center.s.isRunning()){
-                t.stop();
+            if(person==0&&!center.s.isRunning()&&!center.t.isRunning()&&!t.isRunning()){
+            //    t.stop();
             Card c = (Card)e.getSource();
             center.playCard(c,0);
             trick.playCard(c, 0);
@@ -221,9 +212,9 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        if(!center.s.isRunning()){
+        if(!center.s.isRunning()&&!center.t.isRunning()){//waits for all other animations to complete before initiating another play
         if(trick.trickStatus()==people){
-            System.out.println("here");
+            System.out.println("everybody played at this point");
             person = trick.highestPlayer(-1);
             piles[person].addAll(Arrays.asList(trick.getCards()));
             center.takeTrick(person);
@@ -239,6 +230,9 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
             
             
             person=(person+1)%people;
+        }
+        else if(person==0){
+            t.stop();
         }
     }
         }
