@@ -66,6 +66,9 @@ public class Card extends javax.swing.JButton{
         else if(x=='z'){
            this.setIcon(new ImageIcon("back-blue-z.png"));
         }
+        else if(x=='a'){
+           this.setIcon(new ImageIcon("back-blue-a.png"));
+        }
         
     }
 }

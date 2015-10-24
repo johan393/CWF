@@ -37,9 +37,7 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     Center center;
     Image bg;
     
-    Timer r;
     Timer t;
-    Timer s;
     
     
     ArrayList<Card>[] piles;
@@ -159,7 +157,6 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
  }
  
  public void doRoundEnd(){
-     s.stop();
      t.stop();
      String scores="";
     // center.clear();
@@ -170,6 +167,8 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
      }
      
      System.out.println(scores);
+     newRound();
+     
  }
  
  public int countPoints(ArrayList pile){
@@ -213,12 +212,17 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         
         if(!center.s.isRunning()&&!center.t.isRunning()){//waits for all other animations to complete before initiating another play
-        if(trick.trickStatus()==people){
+        if(trick.trickStatus()==people){//if trick is complete
             System.out.println("everybody played at this point");
             person = trick.highestPlayer(-1);
             piles[person].addAll(Arrays.asList(trick.getCards()));
             center.takeTrick(person);
-            trick=new Trick(people);
+            if(!hand[1].empty){
+                trick=new Trick(people);
+            } else {
+                doRoundEnd();
+            }
+            
             
         }
         else if(person!=0){

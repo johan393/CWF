@@ -23,6 +23,8 @@ public class Hand extends javax.swing.JPanel{
     Card[] cards;
     Card invisibleCard;
     char side;
+    boolean empty = false;
+    
     public Hand(Card[] hand,char side) {
         super();
         invisibleCard=new Card(1,1);
@@ -32,7 +34,7 @@ public class Hand extends javax.swing.JPanel{
         if(side=='l'||side=='r'){
                invisibleCard.setPreferredSize(new Dimension(120,80)); 
         }
-        if(side=='a'){
+        if(side=='a'||side=='p'){
                 invisibleCard.setPreferredSize(new Dimension(80,120)); 
         }
         this.side=side;
@@ -111,6 +113,7 @@ public class Hand extends javax.swing.JPanel{
         this.setVisible(true);
     }
     public void playCard(int i){
+        char disp = cards[i].disp;
         this.remove(cards[i]);
         if(this.getComponentCount()>1){
         if(cards[i].disp=='z'){
@@ -162,6 +165,14 @@ public class Hand extends javax.swing.JPanel{
                 }
             }
         }
+        if(cards[i].disp=='g'){
+            for(int j=i-1; j>=0; j--){
+                if(cards[j]!=null){
+                cards[j].setCard('g');
+                j=-1;
+                }
+            }
+        }
         }
         
         else if(this.getComponentCount()==1){
@@ -200,6 +211,7 @@ public class Hand extends javax.swing.JPanel{
         else if(this.getComponentCount()==0){
             
             this.add(invisibleCard);
+            empty=true;
         }
         cards[i]=null;
         this.revalidate();
@@ -218,6 +230,7 @@ public class Hand extends javax.swing.JPanel{
         if(this.getComponentCount()==0){
             
             this.add(invisibleCard);
+            empty=true;
         }
         this.revalidate();
         this.repaint();
