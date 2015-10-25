@@ -105,10 +105,10 @@ public class Center extends javax.swing.JPanel implements ActionListener{
         
     }
     
-    public void pos(int position){
+    public void pos(Dimension d){
         //ox,oy is center of middle panel
-        ox=(this.getWidth()-240)/2;
-        oy=(this.getHeight()-240)/2;
+        ox=(int) ((d.getWidth()-240)/2);
+        oy=(int) ((d.getHeight()-240)/2);
 
         if(people==4){
             posx[0]=ox-40;

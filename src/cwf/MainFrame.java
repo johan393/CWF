@@ -28,11 +28,15 @@ public class MainFrame extends javax.swing.JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setSize(screenSize);
         this.setLayout(new BorderLayout());
-        panel = new HeartsPanel(4,screenSize);
+        String[] players = {"me", "Oak", "Shan", "Jim"};
+        panel = new HeartsPanel(4,screenSize, players);
         panel.setPreferredSize(screenSize);
         this.add(panel);
         this.setResizable(false);
         //this.pack();
+        
+        this.toFront();
+        requestFocus();
         this.setVisible(true);
         
     }

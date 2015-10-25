@@ -7,6 +7,7 @@ package cwf;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -37,6 +39,7 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     Center center;
     Image bg;
     
+    
     Timer t;
     
     
@@ -44,12 +47,14 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     int[] pts;
     Trick trick;
     int person;
+    String[] players;
+    String ScoreList;
+    Dimension d;
     
-
-    
-    public HeartsPanel(int people, Dimension d) {
+    public HeartsPanel(int people, Dimension d, String[] players) {
        // super();
         initComponents();
+        this.d = d;
         setLayout(new java.awt.BorderLayout());
         this.people=people;
         hand = new Hand[people]; 
@@ -62,11 +67,17 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         }
         this.add(center);
         this.setVisible(true);
-        System.out.println("dd");
-        System.out.println(center.getWidth());
+        
      
         
         t=new Timer(800,this);
+        this.players = players;
+        
+        ScoreList="";
+        for(int i=0; i < players.length; i++){
+            ScoreList = ScoreList + players[i] + "\t\t";
+        }
+        
         
         
     }
@@ -78,6 +89,7 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         if(people==4){
             Card[][] hands = deck.stddeal(4);
             
+            
             hand[0]=new Hand(hands[0], 'p');
             hand[1]=new Hand(hands[1], 'l');
             hand[2]=new Hand(hands[2], 'a');
@@ -85,14 +97,15 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
             this.add(hand[0], BorderLayout.SOUTH);
             this.add(hand[1], BorderLayout.WEST);
             this.add(hand[2], BorderLayout.NORTH);
-            this.add(hand[3], BorderLayout.EAST);  
+            this.add(hand[3], BorderLayout.EAST);
+            
         }
         
         setCardListeners();
         person = getFirstPlayer();///the first sequence of plays
         trick=new Trick(people);
         revalidate();
-        center.pos(people);
+        center.pos(d);
         t.start();
     }
    public void paintComponent(Graphics g){
@@ -105,7 +118,6 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
        ActionListener e = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if(person==0&&!center.s.isRunning()&&!center.t.isRunning()&&!t.isRunning()){
-            //    t.stop();
             Card c = (Card)e.getSource();
             center.playCard(c,0);
             trick.playCard(c, 0);
@@ -145,28 +157,17 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         
     }
  
- public boolean getRoundEnd(){
-     
-     int x=0;
-        
-    for(int i=0;i<people;i++){
-        x=x+hand[i].getComponentCount();
-    }
-        return x==0;
-        
- }
- 
  public void doRoundEnd(){
      t.stop();
-     String scores="";
-    // center.clear();
+     ScoreList = ScoreList + System.getProperty("line.separator");
+
      for(int i=0;i<people;i++){
          this.remove(hand[i]);
          pts[i]=pts[i]+countPoints(piles[i]);
-         scores=scores+Integer.toString(pts[i])+"     ";
+         ScoreList=ScoreList+Integer.toString(pts[i])+"\t" + "\t";
      }
      
-     System.out.println(scores);
+     JOptionPane.showMessageDialog(new Frame(), ScoreList);
      newRound();
      
  }
