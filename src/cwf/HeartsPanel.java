@@ -9,6 +9,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +24,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.JLabel;
 
 /**
  *
@@ -47,14 +50,17 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     int[] pts;
     Trick trick;
     int person;
+    int roundcount;
     String[] players;
-    String ScoreList;
+    JPanel ScoreList;
     Dimension d;
+    GridBagConstraints c;
     
     public HeartsPanel(int people, Dimension d, String[] players) {
        // super();
         initComponents();
         this.d = d;
+        roundcount = 0;
         setLayout(new java.awt.BorderLayout());
         this.people=people;
         hand = new Hand[people]; 
@@ -63,19 +69,23 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         piles=new ArrayList[people];
         pts=new int[people];
         for(int i=0;i<people;i++){
-            piles[i]=new ArrayList<Card>();
+            piles[i]=new ArrayList<>();
         }
         this.add(center);
         this.setVisible(true);
         
      
         
-        t=new Timer(800,this);
+        t=new Timer(500,this);
         this.players = players;
         
-        ScoreList="";
+        ScoreList=new JPanel();
+        ScoreList.setLayout(new GridBagLayout());
+        c=new GridBagConstraints();
+        c.gridy=0;
         for(int i=0; i < players.length; i++){
-            ScoreList = ScoreList + players[i] + "\t\t";
+            c.gridx=i;
+            ScoreList.add(new JLabel(players[i]), c);
         }
         
         
@@ -159,15 +169,16 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
  
  public void doRoundEnd(){
      t.stop();
-     ScoreList = ScoreList + System.getProperty("line.separator");
-
+     roundcount++;
+     c.gridy=roundcount;
      for(int i=0;i<people;i++){
          this.remove(hand[i]);
          pts[i]=pts[i]+countPoints(piles[i]);
-         ScoreList=ScoreList+Integer.toString(pts[i])+"\t" + "\t";
+         c.gridx=i;
+         ScoreList.add(new JLabel(Integer.toString(pts[i])), c);
      }
      
-     JOptionPane.showMessageDialog(new Frame(), ScoreList);
+     JOptionPane.showMessageDialog(this,ScoreList,null,0);
      newRound();
      
  }
