@@ -63,7 +63,7 @@ public class Center extends javax.swing.JPanel implements ActionListener{
         this.people=people;
         this.setLayout(null);
         t=new Timer(1,this);
-        s=new Timer(6,new ActionListener() {
+        s=new Timer(1,new ActionListener() {
             
         public void actionPerformed(ActionEvent e) { 
             if(!t.isRunning()){
@@ -95,8 +95,8 @@ public class Center extends javax.swing.JPanel implements ActionListener{
         x=iposx[position];
         y=iposy[position];
         
-        dx=(posx[position]-x)/70;
-        dy=(posy[position]-y)/70;
+        dx=(posx[position]-x)/50;
+        dy=(posy[position]-y)/50;
         animatedCard=Toolkit.getDefaultToolkit().getImage(card.loc);
         acard=card;
         acard.setCard('p');
@@ -137,8 +137,8 @@ public class Center extends javax.swing.JPanel implements ActionListener{
         x=ox-40;
         y=oy-60;
       
-        dx=(iposx[position]-x)/70;
-        dy=(iposy[position]-y)/70;
+        dx=(iposx[position]-x)/50;
+        dy=(iposy[position]-y)/50;
         player=position;
         this.removeAll();
         s.start();//animates from center to pile

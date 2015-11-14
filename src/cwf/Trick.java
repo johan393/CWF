@@ -13,14 +13,14 @@ public class Trick {
     
     Card[] cards;
     int people;
-    int lead;
+    int leader;
     int count;
     
     public Trick(int people){
         cards = new Card[people];
         this.people=people;
         count=0;
-        lead=-1;
+        leader=-1;
     }
     
     public Card[] getCards(){
@@ -32,10 +32,10 @@ public class Trick {
     }
     
     public int highestPlayer(int trump){
-      int highestPlayer = lead;
+      int highestPlayer = leader;
       
       if(trump==-1){
-        int suit = cards[lead].suit;
+        int suit = cards[leader].suit;
         
         for(int i=0;i<people;i++){
             if(cards[i].suit==suit&&cards[i].value>cards[highestPlayer].value){
@@ -49,8 +49,8 @@ public class Trick {
     
     public void playCard(Card card, int i){
 
-        if(count==0){//lead
-            lead=i;
+        if(count==0){// card is lead
+            leader=i;
         }
         this.cards[i]=card;
         count=count+1;

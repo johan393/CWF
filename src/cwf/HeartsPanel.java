@@ -35,17 +35,15 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     /**
      * Creates new form HeartsPanel
      */
-    
+    //these variables are part of game setup
     Hand [] hand;
     Deck deck;
     int people;
     Center center;
     Image bg;
-    
-    
     Timer t;
     
-    
+    //these variables keep track of gameplay
     ArrayList<Card>[] piles;
     int[] pts;
     Trick trick;
@@ -55,6 +53,11 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     JPanel ScoreList;
     Dimension d;
     GridBagConstraints c;
+    
+    //these variables keep track of AI data
+    boolean start;
+    boolean heartsbroken;
+    boolean qplayed; 
     
     public HeartsPanel(int people, Dimension d, String[] players) {
        // super();
@@ -112,7 +115,7 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         }
         
         setCardListeners();
-        person = getFirstPlayer();///the first sequence of plays
+        person = getFirstPlayer();///the person to lead the two of clubs
         trick=new Trick(people);
         revalidate();
         center.pos(d);
@@ -127,14 +130,24 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
    public void setCardListeners(){
        ActionListener e = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if(person==0&&!center.s.isRunning()&&!center.t.isRunning()&&!t.isRunning()){
+            if(person==0&&!center.s.isRunning()&&!center.t.isRunning()&&!t.isRunning()){//should not play while someone else is playing a card
             Card c = (Card)e.getSource();
-            center.playCard(c,0);
-            trick.playCard(c, 0);
-            hand[0].playCard(c);
-            
-            person=(person+1)%people;
-            t.start();
+            ArrayList<Integer> legal = legalMoves();
+            for(int i = 0; i<legal.size(); i++){
+                if(hand[person].cards[legal.get(i)]==c){
+                    start = true;
+                    if(c.suit==3){
+                        heartsbroken=true;
+                    }
+                    center.playCard(c,0);
+                    trick.playCard(c, 0);
+                    hand[0].playCard(c);
+
+                    person=(person+1)%people;
+                    t.start();                    
+                }
+            }
+
             }
         };
        };
@@ -155,17 +168,7 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
    public int getFirstPlayer(){
        return getStart(1);
    }
- public int playCard(int i){
-        Random q = new Random();////////////////// piking a card to play. this part will change
-        int p = q.nextInt(hand[i].cards.length);
-        while(hand[i].cards[p]==null){
-            p=q.nextInt(hand[i].cards.length);
-        }/////////////////////////////////////////
-        
-        return p;
-        
-        
-    }
+
  
  public void doRoundEnd(){
      t.stop();
@@ -238,7 +241,10 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
             
         }
         else if(person!=0){
-            int cardtoplay= playCard(person);
+            int cardtoplay= playCard();
+            if(hand[person].cards[cardtoplay].suit==3){
+                heartsbroken = true;
+            }
             Card c = hand[person].cards[cardtoplay];
             hand[person].playCard(cardtoplay);
             center.playCard(c, person);
@@ -253,4 +259,99 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     }
         }
     
+    public boolean hasnonheart(){
+        for(int i = 0; i < hand[person].cards.length; i++){
+            if(hand[person].cards[i]!=null && hand[person].cards[i].suit!=3){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean hassuit(int suit){
+        for(int i = 0; i < hand[person].cards.length; i++){
+            if(hand[person].cards[i]!=null && hand[person].cards[i].suit==suit){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    
+    public ArrayList legalMoves(){
+        
+        System.out.println(trick.leader);
+        ArrayList<Integer> legal = new ArrayList<>();
+        
+        if(!start){
+            for(int i =0;i<hand[person].cards.length;i++){
+                if(hand[person].cards[i].suit==1 && hand[person].cards[i].value==1){
+                    legal.add(i);
+                }
+            }
+        } 
+        else if(trick.leader==-1){//this means that we are getting the legal plays for a lead
+            if(this.heartsbroken){
+                for(int i = 0; i < hand[person].cards.length; i++){
+                    if(hand[person].cards[i]!=null){
+                        legal.add(i);
+                    }
+                }
+            }
+            else if(hasnonheart() == false){
+                heartsbroken = true;
+                for(int i = 0; i < hand[person].cards.length; i++){
+                    if(hand[person].cards[i]!=null){
+                        legal.add(i);
+                    }
+                }                             
+            }
+            else{
+                for(int i = 0; i < hand[person].cards.length; i++){
+                    if(hand[person].cards[i]!=null && hand[person].cards[i].suit!=3){
+                        legal.add(i);
+                    }
+                }
+            }
+        }
+        else{//this is for a nonlead situation
+        int leadsuit = trick.cards[trick.leader].suit;
+            if(hassuit(leadsuit)){//player needs to follow suit if they can
+                for(int i = 0; i < hand[person].cards.length; i++){
+                    if(hand[person].cards[i]!=null && hand[person].cards[i].suit==leadsuit){
+                        legal.add(i);
+                    }
+                } 
+            }
+            else{//if you can't follow suit, then whatever you want. I dont like the rule where you cant play the Queen on the first trick anyway
+                for(int i = 0; i < hand[person].cards.length; i++){
+                    if(hand[person].cards[i]!=null){
+                        legal.add(i);
+                    }
+                }
+            }
+        }
+        
+        return legal;
+        
+    }
+    
+    public int playCard(){
+     
+        //this block checks various conditions...
+        if(!start){
+            for(int i =0;i<hand[person].cards.length;i++){
+                if(hand[person].cards[i].suit==1 && hand[person].cards[i].value==1){
+                    start = true;
+                    return i;
+                }
+            }
+        }
+        
+        //Easy AI
+        ArrayList<Integer> legalMoves = legalMoves();
+        Random x = new Random();
+        return legalMoves.get(x.nextInt(legalMoves.size()));//returns a random, but legal, play
+    }
 }
+

@@ -101,9 +101,9 @@ public class Hand extends javax.swing.JPanel{
         }
         else{
         FlowLayout flow = new FlowLayout();
-        flow.setHgap(0);
-        //flow.setVgap(0);
         this.setOpaque(false);
+        flow.setHgap(0);
+        flow.setVgap(0);
         this.setLayout(flow);
         for(int i = 0;i<hand.length;i++){
             hand[i].setCard('p');
