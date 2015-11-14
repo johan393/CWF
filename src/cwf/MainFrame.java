@@ -7,8 +7,18 @@ package cwf;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 
 /**
  *
@@ -21,17 +31,62 @@ public class MainFrame extends javax.swing.JFrame {
      * 
      */
     HeartsPanel panel;
+    JMenuBar menuBar;
     public MainFrame() {
         super();
         initComponents();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setUndecorated(true);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize);
         this.setLayout(new BorderLayout());
-        String[] players = {" me ", " Oak ", " Shan ", " Jim "};
+        
+        String[] players = {" Me ", " Oak ", " Shan ", " Jim "};
         panel = new HeartsPanel(4,screenSize, players);
         panel.setPreferredSize(screenSize);
+        menuBar = new JMenuBar();
+        
+        JMenu game = new JMenu("Game");
+        ButtonGroup group = new ButtonGroup();
+        JRadioButtonMenuItem net = new JRadioButtonMenuItem("    Online Game");
+        JRadioButtonMenuItem local = new JRadioButtonMenuItem("    Versus Computer");
+        local.setSelected(true);
+        group.add(net);
+        group.add(local);
+        JMenuItem platformDescriptor = new JMenuItem("Where to Play :");
+        game.add(platformDescriptor);
+        game.add(net);
+        game.add(local);
+        
+        JMenuItem names = new JMenuItem("Change Names");
+        JMenu options = new JMenu("Options");
+        names.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
+            JPanel nameentry = new JPanel();
+            GridLayout grid = new GridLayout(2,5);
+            
+            
+            
+            JOptionPane.showMessageDialog(panel,nameentry,null,0);
+        }});
+        
+        options.add(names);
+        
+        
+        JMenuItem exit = new JMenuItem("Exit");
+        exit.addActionListener(
+        new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        System.exit(0);
+        }});
+        
+        menuBar.add(game);
+        menuBar.add(options);
+        menuBar.add(exit);
+        
+        this.setJMenuBar(menuBar);
         this.add(panel);
+        
         this.setResizable(false);
         //this.pack();
         
