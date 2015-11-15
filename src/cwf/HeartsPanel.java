@@ -117,6 +117,11 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         setCardListeners();
         person = getFirstPlayer();///the person to lead the two of clubs
         trick=new Trick(people);
+        
+        for(int i=0;i<people;i++){
+            piles[i].clear();
+        }
+        
         revalidate();
         center.pos(d);
         t.start();
@@ -181,7 +186,7 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
          ScoreList.add(new JLabel(Integer.toString(pts[i])), c);
      }
      
-     JOptionPane.showMessageDialog(this,ScoreList,null,0);
+     JOptionPane.showMessageDialog(this,ScoreList,"Scores",JOptionPane.PLAIN_MESSAGE);
      newRound();
      
  }

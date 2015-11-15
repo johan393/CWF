@@ -7,18 +7,21 @@ package cwf;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTextField;
 
 /**
  *
@@ -63,11 +66,26 @@ public class MainFrame extends javax.swing.JFrame {
         JMenu options = new JMenu("Options");
         names.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
             JPanel nameentry = new JPanel();
-            GridLayout grid = new GridLayout(2,5);
+            GridLayout grid = new GridLayout(5,2);
+            nameentry.setLayout(grid);
+            nameentry.add(new JLabel("Player Name: "));
+            JTextField playerInput = new JTextField(8);
+            nameentry.add(playerInput);
+            
+            nameentry.add(new JLabel("Computer 1: "));
+            JTextField comp1Input = new JTextField(8);
+            nameentry.add(comp1Input);
+            
+            nameentry.add(new JLabel("Computer 2: "));
+            JTextField comp2Input = new JTextField(8);
+            nameentry.add(comp2Input);
+            
+            nameentry.add(new JLabel("Computer 3: "));
+            JTextField comp3Input = new JTextField(8);
+            nameentry.add(comp3Input);
             
             
-            
-            JOptionPane.showMessageDialog(panel,nameentry,null,0);
+            JOptionPane.showMessageDialog(panel,nameentry,"Name Settings",JOptionPane.PLAIN_MESSAGE);
         }});
         
         options.add(names);
