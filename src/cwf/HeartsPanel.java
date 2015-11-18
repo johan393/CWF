@@ -230,20 +230,23 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        try{
+            Center.sem.acquire();
         
         if(!center.s.isRunning()&&!center.t.isRunning()){//waits for all other animations to complete before initiating another play
         if(trick.trickStatus()==people){//if trick is complete
-            System.out.println("everybody played at this point");
             person = trick.highestPlayer(-1);
             piles[person].addAll(Arrays.asList(trick.getCards()));
+            t.stop();
             center.takeTrick(person);
+            
             if(!hand[1].empty){
                 trick=new Trick(people);
             } else {
                 doRoundEnd();
             }
             
-            
+            t.start();
         }
         else if(person!=0){
             int cardtoplay= playCard();
@@ -252,16 +255,22 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
             }
             Card c = hand[person].cards[cardtoplay];
             hand[person].playCard(cardtoplay);
+            t.stop();
             center.playCard(c, person);
             trick.playCard(c, person);
-            
-            
+
             person=(person+1)%people;
+            t.start();
         }
         else if(person==0){
             t.stop();
         }
     }
+        Center.sem.release();
+        }
+        catch(Exception Ex){
+            System.out.println("there was a sync issue with timer between players");
+        }
         }
     
     public boolean hasnonheart(){
@@ -285,7 +294,6 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     
     public ArrayList legalMoves(){
         
-        System.out.println(trick.leader);
         ArrayList<Integer> legal = new ArrayList<>();
         
         if(!start){

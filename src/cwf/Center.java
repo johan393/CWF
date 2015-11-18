@@ -20,6 +20,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
+import java.util.concurrent.Semaphore;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,7 +36,7 @@ public class Center extends javax.swing.JPanel implements ActionListener{
     /**
      * Creates new form Center
      */
-    
+    static Semaphore sem = new Semaphore(1);
     int people;
     int posx[];
     int posy[];
@@ -65,7 +66,9 @@ public class Center extends javax.swing.JPanel implements ActionListener{
         t=new Timer(1,this);
         s=new Timer(1,new ActionListener() {
             
-        public void actionPerformed(ActionEvent e) { 
+        public void actionPerformed(ActionEvent e) {
+            try{
+            sem.acquire();
             if(!t.isRunning()){
               if(Math.abs((x)-iposx[player])<5&&Math.abs((y)-iposy[player])<5){
                 animatedCard=null;
@@ -77,6 +80,11 @@ public class Center extends javax.swing.JPanel implements ActionListener{
                 y=y+dy;
                 repaint();
              }
+            }
+            sem.release();
+            }
+            catch(Exception ex){
+                System.out.println("there was an issue with thread s timer");
             }
         
              
@@ -124,9 +132,9 @@ public class Center extends javax.swing.JPanel implements ActionListener{
             iposx[0]=ox-40;
             iposx[1]=0;
             iposx[2]=ox-40;
-            iposx[3]=this.getWidth();
+            iposx[3]=this.getWidth()-120;
             
-            iposy[0]=this.getHeight();
+            iposy[0]=this.getHeight()-120;
             iposy[1]=oy-60;
             iposy[2]=0;
             iposy[3]=oy-60;
@@ -174,6 +182,8 @@ public class Center extends javax.swing.JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        try{
+           sem.acquire();
         if(Math.abs((x)-posx[player])<5&&Math.abs((y)-posy[player])<5){
             x=posx[player];
             y=posy[player];
@@ -187,6 +197,11 @@ public class Center extends javax.swing.JPanel implements ActionListener{
             x=x+dx;
             y=y+dy;
             repaint();
+        }
+        sem.release();
+        }
+        catch(Exception ex){
+            System.out.println("there was an error with thread t timer");
         }
         
     }

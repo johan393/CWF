@@ -152,7 +152,6 @@ public class Hand extends javax.swing.JPanel{
             for(int j=i+1; j<cards.length; j++){
                 if(cards[j]!=null){
                 cards[j].setCard('u');
-                System.out.println("j" + j);
                 j=cards.length;
                 }
             }
@@ -176,9 +175,8 @@ public class Hand extends javax.swing.JPanel{
         }
         
         else if(this.getComponentCount()==1){
-            System.out.println("wtf");
             Card c = (Card)this.getComponent(0);
-            System.out.println("disp  " + c.disp);
+
             
                     if(c.disp=='j'){
                         c.setCard('l');
