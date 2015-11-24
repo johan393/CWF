@@ -14,6 +14,7 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,14 +24,14 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.Timer;
+import java.util.Timer;
 import javax.swing.JLabel;
 
 /**
  *
  * @author BeerSmokinGenius
  */
-public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
+public class HeartsPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form HeartsPanel
@@ -53,6 +54,8 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     JPanel ScoreList;
     Dimension d;
     GridBagConstraints c;
+    final Object lock;
+    Card playercard;
     
     //these variables keep track of AI data
     boolean start;
@@ -62,6 +65,7 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     public HeartsPanel(int people, Dimension d, String[] players) {
        // super();
         initComponents();
+        lock = new Object();
         this.d = d;
         roundcount = 0;
         setLayout(new java.awt.BorderLayout());
@@ -78,8 +82,7 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         this.setVisible(true);
         
      
-        
-        t=new Timer(500,this);
+
         this.players = players;
         
         ScoreList=new JPanel();
@@ -115,7 +118,6 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         }
         
         setCardListeners();
-        person = getFirstPlayer();///the person to lead the two of clubs
         trick=new Trick(people);
         
         for(int i=0;i<people;i++){
@@ -124,7 +126,13 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         
         revalidate();
         center.pos(d);
-        t.start();
+        heartsbroken = false;
+        start = false;
+        qplayed = false;
+        
+        person = getFirstPlayer();///the person to lead the two of clubs
+        
+        proceed();
     }
    public void paintComponent(Graphics g){
      super.paintComponent(g);
@@ -133,33 +141,27 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
    }
 
    public void setCardListeners(){
-       ActionListener e = new ActionListener() {
+       ActionListener ex = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if(person==0&&!center.s.isRunning()&&!center.t.isRunning()&&!t.isRunning()){//should not play while someone else is playing a card
-            Card c = (Card)e.getSource();
-            ArrayList<Integer> legal = legalMoves();
-            for(int i = 0; i<legal.size(); i++){
-                if(hand[person].cards[legal.get(i)]==c){
-                    start = true;
-                    if(c.suit==3){
-                        heartsbroken=true;
-                    }
-                    center.playCard(c,0);
-                    trick.playCard(c, 0);
-                    hand[0].playCard(c);
-
-                    person=(person+1)%people;
-                    t.start();                    
+            if(person==0){
+            try{
+                synchronized(lock){
+                    playercard = (Card) e.getSource();
+                    lock.notify();
+                }
+                }
+                catch(Exception E){
+                      System.out.println("Button failed to notify main thread");  
                 }
             }
 
-            }
         };
        };
        for(int i=0;i<hand[0].cards.length;i++){
-           hand[0].cards[i].addActionListener(e);
+           hand[0].cards[i].addActionListener(ex);
        }
     }
+   
    public int getStart(int x){
        for(int i=0;i<people;i++){
            for(int j=0;j<(52/people);j++){
@@ -176,7 +178,6 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
 
  
  public void doRoundEnd(){
-     t.stop();
      roundcount++;
      c.gridy=roundcount;
      for(int i=0;i<people;i++){
@@ -228,50 +229,67 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        try{
-            Center.sem.acquire();
-        
-        if(!center.s.isRunning()&&!center.t.isRunning()){//waits for all other animations to complete before initiating another play
+public void proceed(){
+    boolean done = false;
+    while(!done){
         if(trick.trickStatus()==people){//if trick is complete
             person = trick.highestPlayer(-1);
             piles[person].addAll(Arrays.asList(trick.getCards()));
-            t.stop();
+            try{
+            currentThread().sleep(300);
+            }
+            catch(Exception E){
+                System.out.println("insomnia");
+            }
             center.takeTrick(person);
             
-            if(!hand[1].empty){
+            if(!hand[1].empty){ // if there are sstill more tricks to be played after this one
                 trick=new Trick(people);
             } else {
+                done = true;
                 doRoundEnd();
             }
-            
-            t.start();
         }
         else if(person!=0){
-            int cardtoplay= playCard();
-            if(hand[person].cards[cardtoplay].suit==3){
-                heartsbroken = true;
-            }
-            Card c = hand[person].cards[cardtoplay];
-            hand[person].playCard(cardtoplay);
-            t.stop();
-            center.playCard(c, person);
-            trick.playCard(c, person);
-
+            playCard();
             person=(person+1)%people;
-            t.start();
         }
-        else if(person==0){
-            t.stop();
+        else{//if person == 0, wait for a response from the button
+            try{
+            synchronized(lock){
+                lock.wait();
+            }
+            }
+            catch(Exception ex){
+                System.out.println("Error in proceed synchronization awaiting player response");
+            }
+            
+            ArrayList<Integer> legal = legalMoves();
+            for(int i = 0; i<legal.size(); i++){
+                if(hand[person].cards[legal.get(i)]==playercard){
+
+                    start = true;
+                    if(playercard.suit==3){
+                        heartsbroken=true;
+                    }
+                    
+                    trick.playCard(playercard, 0);
+                    hand[0].playCard(playercard);
+                    center.playCard(playercard,0);
+
+                    person=(person+1)%people;
+                    
+                }
+            }
+            
+            
         }
+
     }
-        Center.sem.release();
-        }
-        catch(Exception Ex){
-            System.out.println("there was a sync issue with timer between players");
-        }
-        }
+    }
+
+        
+    
     
     public boolean hasnonheart(){
         for(int i = 0; i < hand[person].cards.length; i++){
@@ -356,6 +374,10 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
             for(int i =0;i<hand[person].cards.length;i++){
                 if(hand[person].cards[i].suit==1 && hand[person].cards[i].value==1){
                     start = true;
+                    Card c = hand[person].cards[i];
+                    trick.playCard(c, person);
+                    hand[person].playCard(i);
+                    center.playCard(c, person);
                     return i;
                 }
             }
@@ -364,7 +386,17 @@ public class HeartsPanel extends javax.swing.JPanel implements ActionListener {
         //Easy AI
         ArrayList<Integer> legalMoves = legalMoves();
         Random x = new Random();
-        return legalMoves.get(x.nextInt(legalMoves.size()));//returns a random, but legal, play
+        
+        int p = legalMoves.get(x.nextInt(legalMoves.size()));//returns a random, but legal, play
+        
+        Card c = hand[person].cards[p];
+        if(c.suit == 3){
+            heartsbroken=true;
+        }
+        trick.playCard(c, person);
+        hand[person].playCard(p);
+        center.playCard(c, person);
+        return p;
     }
 }
 

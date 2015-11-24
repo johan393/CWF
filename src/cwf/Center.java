@@ -25,98 +25,80 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.Timer;
+import java.util.Timer;
 
 /**
  *
  * @author BeerSmokinGenius
  */
-public class Center extends javax.swing.JPanel implements ActionListener{
+public class Center extends javax.swing.JPanel{
      
     /**
      * Creates new form Center
      */
-    static Semaphore sem = new Semaphore(1);
+
     int people;
-    int posx[];
-    int posy[];
-    int iposx[];
-    int iposy[];
+
     
-    Timer t;//animates card moving from hand to middle
-    Timer s;//animates from center to pile
-    
-    int ox;
-    int oy;
-    
-    
-    float x;
-    float y;
-    float dx;
-    float dy;
-    Image animatedCard;
-    Card acard;
-    int player;
+    public JTimer task;//contains the code to be executed by timer
+    public Timer t;//animator timer
+
+
     
     public Center(int people, Dimension d) {
         super();
         initComponents();
         this.people=people;
         this.setLayout(null);
-        t=new Timer(1,this);
-        s=new Timer(1,new ActionListener() {
-            
-        public void actionPerformed(ActionEvent e) {
-            try{
-            sem.acquire();
-            if(!t.isRunning()){
-              if(Math.abs((x)-iposx[player])<5&&Math.abs((y)-iposy[player])<5){
-                animatedCard=null;
-                s.stop();
-                repaint();
-              }
-              else{
-                x=x+dx;
-                y=y+dy;
-                repaint();
-             }
-            }
-            sem.release();
-            }
-            catch(Exception ex){
-                System.out.println("there was an issue with thread s timer");
-            }
-        
-             
-        }});
-        
-        posx=new int[people];
-        posy=new int[people];
-        iposx=new int[people];
-        iposy=new int[people];
         
         this.setDoubleBuffered(true);
         this.setVisible(true);
-
+        t= new Timer();
     }
     public void playCard(Card card,int position){
-        x=iposx[position];
-        y=iposy[position];
+        task = new JTimer(this, people);
+        JTimer.x=JTimer.iposx[position];
+        JTimer.y=JTimer.iposy[position];
         
-        dx=(posx[position]-x)/50;
-        dy=(posy[position]-y)/50;
-        animatedCard=Toolkit.getDefaultToolkit().getImage(card.loc);
-        acard=card;
-        acard.setCard('p');
-        player=position;
-        t.start();//animates card moving from hand to middle
+        JTimer.dx=(JTimer.posx[position]-JTimer.x)/50;
+        JTimer.dy=(JTimer.posy[position]-JTimer.y)/50;
+        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage(card.loc);
+        JTimer.player = position;
+        JTimer.direction = 1;
+                
+        JTimer.acard=card;
+        JTimer.acard.setCard('p');
+        
+        System.out.println("");
+        System.out.println("");
+        System.out.println(card.suit);
+        System.out.println(card.value);
+        System.out.println(card.loc);
+        System.out.println(position);
+               
+        
+        
+        
+        t.scheduleAtFixedRate(task, 0, 17);
+        try{
+            synchronized(task){
+                task.wait();
+            }
+        }
+        catch(Exception e){
+            System.out.println("Error waiting for Timer to finish animation");
+        }
         
     }
     
     public void pos(Dimension d){
         //ox,oy is center of middle panel
-        ox=(int) ((d.getWidth()-240)/2);
-        oy=(int) ((d.getHeight()-240)/2);
+        int[] posx=new int[people];
+        int[] posy=new int[people];
+        int[] iposx=new int[people];
+        int[] iposy=new int[people];
+        int ox=(int) ((d.getWidth()-240)/2);
+        int oy=(int) ((d.getHeight()-240)/2);
 
         if(people==4){
             posx[0]=ox-40;
@@ -132,31 +114,45 @@ public class Center extends javax.swing.JPanel implements ActionListener{
             iposx[0]=ox-40;
             iposx[1]=0;
             iposx[2]=ox-40;
-            iposx[3]=this.getWidth()-120;
+            iposx[3]=(int) d.getWidth()-120;
             
-            iposy[0]=this.getHeight()-120;
+            iposy[0]=(int) d.getHeight()-120;
             iposy[1]=oy-60;
             iposy[2]=0;
             iposy[3]=oy-60;
+            
         }
+        JTimer.setpos(posx, iposx, posy, iposy);
     }
     public void takeTrick(int position){
-        animatedCard=Toolkit.getDefaultToolkit().getImage("back-blue.png");
-        x=ox-40;
-        y=oy-60;
+        task = new JTimer(this, people);
+        JTimer.x=JTimer.posx[position];
+        JTimer.y=JTimer.posy[position];
+        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage("back-blue.png");
       
-        dx=(iposx[position]-x)/50;
-        dy=(iposy[position]-y)/50;
-        player=position;
+        JTimer.dx=(JTimer.iposx[position]-JTimer.x)/50;
+        JTimer.dy=(JTimer.iposy[position]-JTimer.y)/50;
         this.removeAll();
-        s.start();//animates from center to pile
+        
+        JTimer.direction= 0;
+        JTimer.player = position;
+        t.scheduleAtFixedRate(task, 0, 17);
+        try{
+            synchronized(task){
+                task.wait();
+            }
+        }
+        catch(Exception e){
+            System.out.println("Error waiting for Timer to finish animation of taking a trick");
+        }
+
     }
         
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        if(animatedCard!=null){
-            g.drawImage(animatedCard, (int)x, (int)y, 80,120, null);//type cast here is literally just a simpler rounding function
+        if(JTimer.animatedCard!=null){
+            g.drawImage(JTimer.animatedCard, (int)JTimer.x, (int)JTimer.y, 80,120, null);//type cast here is literally just a simpler rounding function
         }
     }
 
@@ -180,29 +176,5 @@ public class Center extends javax.swing.JPanel implements ActionListener{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        try{
-           sem.acquire();
-        if(Math.abs((x)-posx[player])<5&&Math.abs((y)-posy[player])<5){
-            x=posx[player];
-            y=posy[player];
-            acard.setBounds((int)x,(int)y,80,120);
-            this.add(acard);
-            animatedCard=null;
-            t.stop();
-            repaint();
-        }
-        else{
-            x=x+dx;
-            y=y+dy;
-            repaint();
-        }
-        sem.release();
-        }
-        catch(Exception ex){
-            System.out.println("there was an error with thread t timer");
-        }
-        
-    }
+
 }
