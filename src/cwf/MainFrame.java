@@ -55,6 +55,7 @@ public class MainFrame extends javax.swing.JFrame {
         this.setSize(screenSize);
         this.setLayout(new BorderLayout());
         
+        
         panel = new HeartsPanel(people,screenSize, players);
         panel.setPreferredSize(screenSize);
         menuBar = new JMenuBar();

@@ -13,7 +13,7 @@ import java.util.concurrent.Semaphore;
  *
  * @author BeerSmokinGenius
  */
-public class JTimer extends TimerTask{
+public class JTimer extends TimerTask implements Runnable{
     static Semaphore sem = new Semaphore(1);
     public static int direction;
     public static int player;

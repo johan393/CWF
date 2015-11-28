@@ -51,7 +51,7 @@ public class Center extends javax.swing.JPanel{
         this.people=people;
         this.setLayout(null);
         
-        this.setDoubleBuffered(true);
+        
         this.setVisible(true);
         t= new Timer();
     }
@@ -60,8 +60,14 @@ public class Center extends javax.swing.JPanel{
         JTimer.x=JTimer.iposx[position];
         JTimer.y=JTimer.iposy[position];
         
-        JTimer.dx=(JTimer.posx[position]-JTimer.x)/50;
-        JTimer.dy=(JTimer.posy[position]-JTimer.y)/50;
+        if(this.people==4&&(position==0|position==2)){
+            JTimer.dx=(JTimer.posx[position]-JTimer.x)/100;
+            JTimer.dy=(JTimer.posy[position]-JTimer.y)/100;
+        }
+        else{
+            JTimer.dx=(JTimer.posx[position]-JTimer.x)/160;
+            JTimer.dy=(JTimer.posy[position]-JTimer.y)/160;
+        }
         JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage(card.loc);
         JTimer.player = position;
         JTimer.direction = 1;
@@ -79,7 +85,7 @@ public class Center extends javax.swing.JPanel{
         
         
         
-        t.scheduleAtFixedRate(task, 0, 17);
+        t.scheduleAtFixedRate(task, 0, 8);
         try{
             synchronized(task){
                 task.wait();
@@ -149,11 +155,12 @@ public class Center extends javax.swing.JPanel{
     }
         
     @Override
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
+    public void paint(Graphics g){
+        super.paint(g);
         if(JTimer.animatedCard!=null){
             g.drawImage(JTimer.animatedCard, (int)JTimer.x, (int)JTimer.y, 80,120, null);//type cast here is literally just a simpler rounding function
         }
+        Toolkit.getDefaultToolkit().sync();
     }
 
     /**
