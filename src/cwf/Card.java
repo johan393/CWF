@@ -5,8 +5,11 @@
  */
 package cwf;
 
+import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 
 /**
  *
@@ -18,6 +21,7 @@ public class Card extends javax.swing.JButton{
     int suit;
     String loc;
     char disp;
+    boolean select;
     
     Card(int val, int s){
         super();
@@ -31,45 +35,23 @@ public class Card extends javax.swing.JButton{
     void setCard(char x){
         disp=x;
         if(x=='p'){
-           this.setIcon(new ImageIcon(loc));
+           this.setIcon(new ImageIcon("themes\\" + MainFrame.frontTheme + "\\" + loc));
         }
-        else if(x=='l'){
-           this.setIcon(new ImageIcon("back-blue-l.png"));
+        else{
+           this.setIcon(new ImageIcon("themes\\" + MainFrame.theme + "\\" + x + ".png"));
         }
-        else if(x=='t'){
-           this.setIcon(new ImageIcon("back-blue-t.png"));
-        }
-        else if(x=='r'){
-           this.setIcon(new ImageIcon("back-blue-r.png"));
-        }
-        else if(x=='m'){
-           this.setIcon(new ImageIcon("back-blue-m.png"));
-        }
-        else if(x=='g'){
-           this.setIcon(new ImageIcon("back-blue-g.png"));
-        }
-        else if(x=='u'){
-           this.setIcon(new ImageIcon("back-blue-u.png"));
-        }
-        else if(x=='c'){
-           this.setIcon(new ImageIcon("back-blue-c.png"));
-        }
-        else if(x=='j'){
-           this.setIcon(new ImageIcon("back-blue-j.png"));
-        }
-        else if(x=='f'){
-           this.setIcon(new ImageIcon("back-blue-f.png"));
-        }
-        else if(x=='o'){
-           this.setIcon(new ImageIcon("back-blue-o.png"));
-        }
-        else if(x=='z'){
-           this.setIcon(new ImageIcon("back-blue-z.png"));
-        }
-        else if(x=='a'){
-           this.setIcon(new ImageIcon("back-blue-a.png"));
-        }
+       
         
+    }
+    
+    public void select(){
+        this.select = true;
+        this.setBorder(BorderFactory.createLineBorder(Color.yellow, 3));
+    }
+        
+    public void deselect(){
+        this.select = false;
+        this.setBorder(BorderFactory.createEmptyBorder());
     }
 }
 

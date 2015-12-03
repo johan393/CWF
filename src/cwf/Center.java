@@ -61,14 +61,14 @@ public class Center extends javax.swing.JPanel{
         JTimer.y=JTimer.iposy[position];
         
         if(this.people==4&&(position==0|position==2)){
-            JTimer.dx=(JTimer.posx[position]-JTimer.x)/100;
-            JTimer.dy=(JTimer.posy[position]-JTimer.y)/100;
+            JTimer.dx=(JTimer.posx[position]-JTimer.x)/110;
+            JTimer.dy=(JTimer.posy[position]-JTimer.y)/110;
         }
         else{
             JTimer.dx=(JTimer.posx[position]-JTimer.x)/160;
             JTimer.dy=(JTimer.posy[position]-JTimer.y)/160;
         }
-        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage(card.loc);
+        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage("themes\\" + MainFrame.frontTheme + "\\" + card.loc);
         JTimer.player = position;
         JTimer.direction = 1;
                 
@@ -120,9 +120,9 @@ public class Center extends javax.swing.JPanel{
             iposx[0]=ox-40;
             iposx[1]=0;
             iposx[2]=ox-40;
-            iposx[3]=(int) d.getWidth()-120;
+            iposx[3]=(int) d.getWidth()-320;
             
-            iposy[0]=(int) d.getHeight()-120;
+            iposy[0]=(int) d.getHeight()-385;
             iposy[1]=oy-60;
             iposy[2]=0;
             iposy[3]=oy-60;
@@ -134,15 +134,21 @@ public class Center extends javax.swing.JPanel{
         task = new JTimer(this, people);
         JTimer.x=JTimer.posx[position];
         JTimer.y=JTimer.posy[position];
-        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage("back-blue.png");
-      
-        JTimer.dx=(JTimer.iposx[position]-JTimer.x)/50;
-        JTimer.dy=(JTimer.iposy[position]-JTimer.y)/50;
+        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage("themes\\" + MainFrame.theme + "\\base.png");
+        
+        if(this.people==4&&(position==0|position==2)){
+            JTimer.dx=(JTimer.iposx[position]-JTimer.x)/110;
+            JTimer.dy=(JTimer.iposy[position]-JTimer.y)/110;
+        }
+        else{
+            JTimer.dx=(JTimer.iposx[position]-JTimer.x)/160;
+            JTimer.dy=(JTimer.iposy[position]-JTimer.y)/160;
+        }
         this.removeAll();
         
         JTimer.direction= 0;
         JTimer.player = position;
-        t.scheduleAtFixedRate(task, 0, 17);
+        t.scheduleAtFixedRate(task, 0, 8);
         try{
             synchronized(task){
                 task.wait();
@@ -162,6 +168,7 @@ public class Center extends javax.swing.JPanel{
         }
         Toolkit.getDefaultToolkit().sync();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -38,9 +38,14 @@ public class MainFrame extends javax.swing.JFrame {
      * Creates new form MainFrame
      * 
      */
+    public static String theme;
+    public static String frontTheme;
+    public static String bgtheme;
+    
     HeartsPanel panel;
     JMenuBar menuBar;
     String[] players;
+    
     int people;
     char type;
     
@@ -68,9 +73,18 @@ public class MainFrame extends javax.swing.JFrame {
         group.add(net);
         group.add(local);
         JMenuItem platformDescriptor = new JMenuItem("Where to Play :");
+        JMenuItem scores = new JMenuItem("Current Scores");
+        scores.addActionListener( 
+            new ActionListener()  {
+            public void actionPerformed(ActionEvent e) {
+                panel.displayScores();
+            }
+        });
+        game.add(scores);
         game.add(platformDescriptor);
         game.add(net);
         game.add(local);
+ 
         
         JMenuItem names = new JMenuItem("Change Names");
         JMenu options = new JMenu("Options");
@@ -144,6 +158,9 @@ public class MainFrame extends javax.swing.JFrame {
             for(int i=0;i<people;i++){
                 players[i]=in.readLine();  
             }
+            theme = in.readLine();
+            frontTheme = in.readLine();
+            bgtheme = in.readLine();
             in.close();
             filein.close();
         }
@@ -164,6 +181,12 @@ public class MainFrame extends javax.swing.JFrame {
                 out.write(players[i]); 
                 out.write(System.lineSeparator());
             }
+            out.write(theme);
+            out.write(System.lineSeparator());
+            out.write(frontTheme);
+            out.write(System.lineSeparator());
+            out.write(bgtheme);
+            out.write(System.lineSeparator());
             out.close();
             fileout.close();
         }

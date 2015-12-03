@@ -25,6 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.util.Timer;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 
 /**
@@ -56,11 +57,15 @@ public class HeartsPanel extends javax.swing.JPanel {
     GridBagConstraints c;
     final Object lock;
     Card playercard;
+    JButton passbutton;
+    String passDirection;
+    boolean passphase;
     
     //these variables keep track of AI data
     boolean start;
     boolean heartsbroken;
-    boolean qplayed; 
+    boolean qplayed;
+    
     
     public HeartsPanel(int people, Dimension d, String[] players) {
        // super();
@@ -72,7 +77,7 @@ public class HeartsPanel extends javax.swing.JPanel {
         this.people=people;
         hand = new Hand[people]; 
         center = new Center(people, d);
-        bg=new ImageIcon("bg_green.png").getImage();
+        bg=new ImageIcon("themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
         this.setDoubleBuffered(true);
         piles=new ArrayList[people];
         pts=new int[people];
@@ -92,8 +97,16 @@ public class HeartsPanel extends javax.swing.JPanel {
         c.gridy=0;
         for(int i=0; i < players.length; i++){
             c.gridx=i;
-            ScoreList.add(new JLabel(players[i]), c);
+            ScoreList.add(new JLabel("   " + players[i] + "   "), c);
         }
+        
+        passDirection = "left";
+        passbutton= new JButton();
+        passbutton.addActionListener(new ActionListener(){
+        public void actionPerformed(ActionEvent e) {
+            
+        }
+    });
         
         
         
@@ -102,6 +115,7 @@ public class HeartsPanel extends javax.swing.JPanel {
         deck=new Deck();
         deck.shuffle();
         deck.empVal(0,13);
+        passphase=true;
         
         if(people==4){
             Card[][] hands = deck.stddeal(4);
@@ -117,7 +131,7 @@ public class HeartsPanel extends javax.swing.JPanel {
             this.add(hand[3], BorderLayout.EAST);
             
         }
-        
+        hand[0].cards[0].select();
         setCardListeners();
         trick=new Trick(people);
         
@@ -133,8 +147,14 @@ public class HeartsPanel extends javax.swing.JPanel {
         
         person = getFirstPlayer();///the person to lead the two of clubs
         
+        pass();
+        
         proceed();
     }
+   
+   public void pass(){
+       passbutton.setText("Pass 3 cards " + passDirection);
+   }
    public void paintComponent(Graphics g){
      super.paintComponent(g);
      g.drawImage(bg,0,0,null);
@@ -144,18 +164,27 @@ public class HeartsPanel extends javax.swing.JPanel {
    public void setCardListeners(){
        ActionListener ex = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if(person==0){
-            try{
-                synchronized(lock){
-                    playercard = (Card) e.getSource();
-                    lock.notify();
+            if(passphase){
+                if(((Card)e.getSource()).select){
+                    ((Card)e.getSource()).deselect();
                 }
+                else{
+                    ((Card)e.getSource()).select();
                 }
+            }
+            else{
+                if(person==0){
+                try{
+                    synchronized(lock){
+                        playercard = (Card) e.getSource();
+                        lock.notify();
+                }
+                    }
                 catch(Exception E){
                       System.out.println("Button failed to notify main thread");  
                 }
+                }
             }
-
         };
        };
        for(int i=0;i<hand[0].cards.length;i++){
@@ -181,9 +210,28 @@ public class HeartsPanel extends javax.swing.JPanel {
  public void doRoundEnd(){
      roundcount++;
      c.gridy=roundcount;
+     int pt;
+     boolean owned = false;
      for(int i=0;i<people;i++){
          this.remove(hand[i]);
-         pts[i]=pts[i]+countPoints(piles[i]);
+         pt = countPoints(piles[i]);
+         if(pt==26){
+            owned = true;
+         }
+         pts[i]=pts[i]+ pt;
+     }
+     if(owned == true){
+          for(int i=0;i<people;i++){
+              pt = countPoints(piles[i]);
+              if(pt==26){
+                  pts[i] = pts[i] - 26;//removes 26 from the person who got them all 
+              }
+              else{
+                  pts[i] = pts[i] + 26;//add 26 to those that were owned
+              }
+          }
+     }
+     for(int i=0;i<people;i++){
          c.gridx=i;
          ScoreList.add(new JLabel(Integer.toString(pts[i])), c);
      }
@@ -209,13 +257,6 @@ public class HeartsPanel extends javax.swing.JPanel {
      return points;
  }
  
- 
-      
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -289,6 +330,9 @@ public void proceed(){
     }
     }
 
+public void displayScores(){
+    JOptionPane.showMessageDialog(this,ScoreList,"Scores",JOptionPane.PLAIN_MESSAGE);
+}
         
     
     

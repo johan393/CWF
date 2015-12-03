@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -232,6 +233,60 @@ public class Hand extends javax.swing.JPanel{
         }
         this.revalidate();
         this.repaint();
+    }
+    
+    public int getSelectedCount(){
+        int selected = 0;
+        for(int i=0; i<cards.length; i++){
+            if(cards[i]!=null&&cards[i].select==true){
+                selected++;
+            }
+        }
+        return selected;
+    }
+    
+        public Card[] getSelectedCards(){
+        ArrayList<Card> selected = new ArrayList<>(3);
+        for(int i=0; i<cards.length; i++){
+            if(cards[i]!=null&&cards[i].select==true){
+                selected.add(cards[i]);
+            }
+        }
+        return (Card[]) selected.toArray();
+    }
+    
+    public void addCard(Card c){//one of the ugliest operations... inserting into an array
+        this.removeAll();
+        boolean added = false;
+        Card[] nHand = new Card[cards.length+1];
+        int counter = 0;
+        while(added == false && counter<cards.length){
+            if(c.suit<cards[counter].suit && c.value<cards[counter].value){
+                added = true;
+                nHand[counter]=c;
+            }
+            else{
+                nHand[counter]=cards[counter];
+                counter = counter+1;
+            }
+        }
+        while(added == true && counter<cards.length){
+                nHand[counter+1]=cards[counter];
+                counter = counter+1;
+        }
+        if(added==false){
+            nHand[counter] = c;
+        }
+        
+        this.cards = nHand;
+        
+        for(int i = 0; i< this.cards.length; i++){
+            cards[i].setCard('p');
+            this.add(cards[i]);
+        }
+    }
+    public void sort(){
+        
     }
     
         
