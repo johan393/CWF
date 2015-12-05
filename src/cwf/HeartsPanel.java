@@ -190,7 +190,7 @@ public class HeartsPanel extends javax.swing.JPanel {
        for(int i = 1; i<people; i++){//everybody except the player
            passcards[i]=getPassCards(i);
        }
-       
+       System.out.println("synch");
         synchronized(lock){//wait for player to select the cards to pass
             try{
                 System.out.println("bwait1");
@@ -526,17 +526,20 @@ public void displayScores(){
         //easy AI
         Card [] p = new Card[3];
         Random x = new Random();
-        int r = x.nextInt(hand[player].cards.length);
-        int count = 0;
+        int r = x.nextInt(hand[player].cards.length); 
         
-        while(p[2]==null){
-            if(hand[player].cards[r]!=null){
-                p[count] = hand[player].cards[r];
-                hand[player].cards[r] = null;
-                count++;
-                r = x.nextInt(hand[player].cards.length);
+        for(int i=0; i<3; i++){
+            p[i] = hand[player].cards[r];
+            hand[player].cards[r]=null;
+            if(p[i]==null){
+                i=i-1;
             }
+            r = x.nextInt(hand[player].cards.length);
         }
+        System.out.println(player + "  " + p[0].loc);
+        System.out.println(player + "  " + p[1].loc);
+        System.out.println(player + "  " + p[2].loc);
+        System.out.println();
         return p;
         }
 }
