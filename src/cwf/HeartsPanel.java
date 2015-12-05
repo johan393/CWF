@@ -57,6 +57,8 @@ public class HeartsPanel extends javax.swing.JPanel {
     GridBagConstraints c;
     final Object lock;
     Card playercard;
+    
+    Card[][] passcards;
     JButton passbutton;
     String passDirection;
     boolean passphase;
@@ -100,11 +102,38 @@ public class HeartsPanel extends javax.swing.JPanel {
             ScoreList.add(new JLabel("   " + players[i] + "   "), c);
         }
         
-        passDirection = "left";
+        passDirection = "Left";
         passbutton= new JButton();
         passbutton.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e) {
-            
+            if(passphase){
+                System.out.println(hand[0].getSelectedCount());
+            if(hand[0].getSelectedCount()==3){
+                passcards[0]=hand[0].getSelectedCards();
+                synchronized(lock){
+                    System.out.println(" block   ");
+                    try{
+                        lock.notify();
+                    }
+                    catch(Exception ex){
+                        System.out.println("could not notify passing wait");
+                    }
+                }
+            }
+        }   
+            else{
+                for(int i = 0; i<hand[0].cards.length; i++){
+                    hand[0].cards[i].deselect();
+                }
+                synchronized(lock){
+                    try{
+                        lock.notify();
+                    }
+                    catch(Exception ex){
+                        System.out.println("could not notify passing wait");
+                    }
+                }
+            }
         }
     });
         
@@ -131,7 +160,6 @@ public class HeartsPanel extends javax.swing.JPanel {
             this.add(hand[3], BorderLayout.EAST);
             
         }
-        hand[0].cards[0].select();
         setCardListeners();
         trick=new Trick(people);
         
@@ -153,7 +181,56 @@ public class HeartsPanel extends javax.swing.JPanel {
     }
    
    public void pass(){
-       passbutton.setText("Pass 3 cards " + passDirection);
+       passbutton.setText("Pass 3 Cards " + passDirection);
+       passbutton.setBounds(JTimer.iposx[0]-40, JTimer.iposy[0] + 20, 160, 40);
+       center.add(passbutton);
+       
+       passcards = new Card[people][3];
+       
+       for(int i = 1; i<people; i++){//everybody except the player
+           passcards[i]=getPassCards(i);
+       }
+       
+        synchronized(lock){//wait for player to select the cards to pass
+            try{
+                System.out.println("bwait1");
+            lock.wait();
+            System.out.println("bwait2");
+                
+            }
+            catch(Exception e){
+                System.out.println("error waiting for passbutton");
+            }
+        }
+        System.out.println("MMM"+passcards[0][0].suit);
+        passphase = false;
+        passcards[0][0].deselect();
+        passcards[0][1].deselect();
+        passcards[0][2].deselect();
+        
+        if(people == 4){
+            if(passDirection.equals("Left")){
+                hand[1].addCards(passcards[0]);
+                hand[2].addCards(passcards[1]);
+                hand[3].addCards(passcards[2]);
+                passcards[3][0].select();
+                passcards[3][1].select();
+                passcards[3][2].select();
+                hand[0].addCards(passcards[3]);
+                passDirection = "right";
+                passbutton.setText("OK");
+            }
+        }
+        synchronized(lock){//wait for player to check out new cards
+            try{
+            lock.wait();
+            }
+            catch(Exception e){
+                System.out.println("error waiting for passbutton");
+            }
+        
+            center.remove(passbutton);
+   }
    }
    public void paintComponent(Graphics g){
      super.paintComponent(g);
@@ -443,5 +520,25 @@ public void displayScores(){
         center.playCard(c, person);
         return p;
     }
+    
+    public Card[] getPassCards(int player){
+        
+        //easy AI
+        Card [] p = new Card[3];
+        Random x = new Random();
+        int r = x.nextInt(hand[player].cards.length);
+        int count = 0;
+        
+        while(p[2]==null){
+            if(hand[player].cards[r]!=null){
+                p[count] = hand[player].cards[r];
+                hand[player].cards[r] = null;
+                count++;
+                r = x.nextInt(hand[player].cards.length);
+            }
+        }
+        return p;
+        }
 }
+
 

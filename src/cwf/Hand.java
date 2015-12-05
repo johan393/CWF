@@ -26,6 +26,7 @@ public class Hand extends javax.swing.JPanel{
     char side;
     boolean empty = false;
     
+    
     public Hand(Card[] hand,char side) {
         super();
         invisibleCard=new Card(1,1);
@@ -238,7 +239,7 @@ public class Hand extends javax.swing.JPanel{
     public int getSelectedCount(){
         int selected = 0;
         for(int i=0; i<cards.length; i++){
-            if(cards[i]!=null&&cards[i].select==true){
+            if(cards[i].select==true){
                 selected++;
             }
         }
@@ -246,17 +247,107 @@ public class Hand extends javax.swing.JPanel{
     }
     
         public Card[] getSelectedCards(){
-        ArrayList<Card> selected = new ArrayList<>(3);
+        ArrayList<Card> selected = new ArrayList<Card>(3);
         for(int i=0; i<cards.length; i++){
             if(cards[i]!=null&&cards[i].select==true){
                 selected.add(cards[i]);
             }
         }
-        return (Card[]) selected.toArray();
+        return selected.toArray(new Card[]{});
     }
     
-    public void addCard(Card c){//one of the ugliest operations... inserting into an array
+    public void add1Card(Card cd, char side){//one of the ugliest operations... inserting into an array
         this.removeAll();
+        clean();
+        boolean added = false;
+        Card[] nHand = new Card[cards.length+1];
+        int counter = 0;
+        while(added == false && counter<cards.length){
+            if(cd.suit<cards[counter].suit && cd.value<cards[counter].value){
+                added = true;
+                nHand[counter]=cd;
+            }
+            else{
+                nHand[counter]=cards[counter];
+                counter = counter+1;
+            }
+        }
+        while(added == true && counter<cards.length){
+                nHand[counter+1]=cards[counter];
+                counter = counter+1;
+        }
+        if(added==false){
+            nHand[counter] = cd;
+        }
+        
+        this.cards = nHand;
+        
+        if(side=='p'){
+        for(int i = 0; i< this.cards.length; i++){
+            cards[i].setCard('p');
+            this.add(cards[i]);
+        }
+        }
+        else if(side=='r'){
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.weightx=0.5;
+            c.gridx=0;
+            c.gridy=0;
+
+            cards[0].setCard('m');
+            this.add(cards[0],c);
+            for(int i=1;i<cards.length-1;i++){
+                c.gridy=i;
+                cards[i].setCard('t');
+                this.add(cards[i],c);
+
+            }
+            c.gridy=cards.length-1;
+            cards[cards.length-1].setCard('g');
+            this.add(cards[cards.length-1],c);
+        }
+        else if(side=='l'){
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.weightx=0.5;
+            c.gridx=0;
+            c.gridy=0;
+            
+            cards[0].setCard('u');
+            this.add(cards[0],c);
+            for(int i=1;i<cards.length-1;i++){
+                c.gridy=i;
+                cards[i].setCard('c');
+                this.add(cards[i],c);
+
+            }
+            c.gridy=cards.length-1;
+            cards[cards.length-1].setCard('j');
+            this.add(cards[cards.length-1],c);
+        }
+        else if(side=='a'){
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.VERTICAL;
+            c.weighty=0.5;
+            c.gridx=0;
+            c.gridy=0;
+            
+            cards[0].setCard('z');
+            this.add(cards[0],c);
+            for(int i=1;i<cards.length-1;i++){
+                c.gridx=i;
+                cards[i].setCard('o');
+                this.add(cards[i],c);
+
+            }
+            c.gridx=cards.length-1;
+            cards[cards.length-1].setCard('f');
+            this.add(cards[cards.length-1],c);
+        }
+    }
+    
+    private void addCard(Card c){//one of the ugliest operations... inserting into an array
         boolean added = false;
         Card[] nHand = new Card[cards.length+1];
         int counter = 0;
@@ -277,18 +368,101 @@ public class Hand extends javax.swing.JPanel{
         if(added==false){
             nHand[counter] = c;
         }
-        
+
         this.cards = nHand;
+    }
+    
+    public void addCards(Card[] newcards){
+        this.removeAll();
+        clean();
+        for(int i = 0; i<newcards.length; i++){
+            addCard(newcards[i]);
+        }
         
+        if(side == 'p'){
         for(int i = 0; i< this.cards.length; i++){
             cards[i].setCard('p');
             this.add(cards[i]);
         }
+        }
+        else if(side=='r'){
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.weightx=0.5;
+            c.gridx=0;
+            c.gridy=0;
+
+            cards[0].setCard('m');
+            this.add(cards[0],c);
+            for(int i=1;i<cards.length-1;i++){
+                c.gridy=i;
+                cards[i].setCard('t');
+                this.add(cards[i],c);
+
+            }
+            c.gridy=cards.length-1;
+            cards[cards.length-1].setCard('g');
+            this.add(cards[cards.length-1],c);
+        }
+        else if(side=='l'){
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.weightx=0.5;
+            c.gridx=0;
+            c.gridy=0;
+            
+            cards[0].setCard('u');
+            this.add(cards[0],c);
+            for(int i=1;i<cards.length-1;i++){
+                c.gridy=i;
+                cards[i].setCard('c');
+                this.add(cards[i],c);
+
+            }
+            c.gridy=cards.length-1;
+            cards[cards.length-1].setCard('j');
+            this.add(cards[cards.length-1],c);
+        }
+        else if(side=='a'){
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.VERTICAL;
+            c.weighty=0.5;
+            c.gridx=0;
+            c.gridy=0;
+            
+            cards[0].setCard('z');
+            this.add(cards[0],c);
+            for(int i=1;i<cards.length-1;i++){
+                c.gridx=i;
+                cards[i].setCard('o');
+                this.add(cards[i],c);
+
+            }
+            c.gridx=cards.length-1;
+            cards[cards.length-1].setCard('f');
+            this.add(cards[cards.length-1],c);
+        }
     }
-    public void sort(){
+  
+    public void clean(){//removes null cards from the array
+        Card [] nHand;
+        int count = 0;
+        for(int i=0;i<cards.length; i++){
+            if(cards[i]!=null){
+                count++;
+            }
+        }
+        nHand = new Card[count];
+        count = 0;
+        for(int i=0;i<cards.length; i++){
+            if(cards[i]!=null){
+                nHand[count]=cards[i];
+                count++;
+            }
+        }
+        cards = nHand;
         
     }
-    
         
 
     /**
