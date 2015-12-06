@@ -6,6 +6,7 @@
 package cwf;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -15,6 +16,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import static java.lang.Thread.currentThread;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -104,12 +106,22 @@ public class HeartsPanel extends javax.swing.JPanel {
         
         passDirection = "Left";
         passbutton= new JButton();
+        Color color;
+        try{
+        Field field = Class.forName("java.awt.Color").getField(MainFrame.buttonColor);
+        color = (Color)field.get(null);
+        }
+        catch(Exception e){
+        color = null;
+        }
+        passbutton.setBackground(color);
         passbutton.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e) {
             if(passphase){
                 System.out.println(hand[0].getSelectedCount());
             if(hand[0].getSelectedCount()==3){
-                passcards[0]=hand[0].getSelectedCards();
+                passcards[0]=hand[0].getSelectedCards(true);
+                
                 synchronized(lock){
                     System.out.println(" block   ");
                     try{
@@ -133,7 +145,7 @@ public class HeartsPanel extends javax.swing.JPanel {
                         System.out.println("could not notify passing wait");
                     }
                 }
-            }
+            }             
         }
     });
         
@@ -172,10 +184,10 @@ public class HeartsPanel extends javax.swing.JPanel {
         heartsbroken = false;
         start = false;
         qplayed = false;
+
+        pass();
         
         person = getFirstPlayer();///the person to lead the two of clubs
-        
-        pass();
         
         proceed();
     }
@@ -213,9 +225,23 @@ public class HeartsPanel extends javax.swing.JPanel {
                 hand[1].addCards(passcards[0]);
                 hand[2].addCards(passcards[1]);
                 hand[3].addCards(passcards[2]);
-                passcards[3][0].select();
-                passcards[3][1].select();
-                passcards[3][2].select();
+                for(int i = 0; i<3; i++){
+                    passcards[3][i].select();
+                    passcards[3][i].addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            if(person==0){
+                                try{
+                                    synchronized(lock){
+                                        playercard = (Card) e.getSource();
+                                        lock.notify();
+                                }
+                                    }
+                                catch(Exception E){
+                                      System.out.println("Button failed to notify main thread");  
+                                }
+                            }
+                        }});
+                }
                 hand[0].addCards(passcards[3]);
                 passDirection = "right";
                 passbutton.setText("OK");
@@ -410,9 +436,7 @@ public void proceed(){
 public void displayScores(){
     JOptionPane.showMessageDialog(this,ScoreList,"Scores",JOptionPane.PLAIN_MESSAGE);
 }
-        
-    
-    
+            
     public boolean hasnonheart(){
         for(int i = 0; i < hand[person].cards.length; i++){
             if(hand[person].cards[i]!=null && hand[person].cards[i].suit!=3){
@@ -536,10 +560,6 @@ public void displayScores(){
             }
             r = x.nextInt(hand[player].cards.length);
         }
-        System.out.println(player + "  " + p[0].loc);
-        System.out.println(player + "  " + p[1].loc);
-        System.out.println(player + "  " + p[2].loc);
-        System.out.println();
         return p;
         }
 }

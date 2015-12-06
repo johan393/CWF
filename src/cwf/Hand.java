@@ -246,24 +246,27 @@ public class Hand extends javax.swing.JPanel{
         return selected;
     }
     
-        public Card[] getSelectedCards(){
+        public Card[] getSelectedCards(boolean remove){
         ArrayList<Card> selected = new ArrayList<Card>(3);
         for(int i=0; i<cards.length; i++){
             if(cards[i]!=null&&cards[i].select==true){
                 selected.add(cards[i]);
+                if(remove){
+                cards[i]= null;
+                }
             }
         }
         return selected.toArray(new Card[]{});
     }
     
-    public void add1Card(Card cd, char side){//one of the ugliest operations... inserting into an array
+    public void add1Card(Card cd){//one of the ugliest operations... inserting into an array
         this.removeAll();
         clean();
         boolean added = false;
         Card[] nHand = new Card[cards.length+1];
         int counter = 0;
         while(added == false && counter<cards.length){
-            if(cd.suit<cards[counter].suit && cd.value<cards[counter].value){
+            if(cd.suit<cards[counter].suit||(cd.suit<=cards[counter].suit && cd.value<cards[counter].value)){
                 added = true;
                 nHand[counter]=cd;
             }
@@ -352,7 +355,7 @@ public class Hand extends javax.swing.JPanel{
         Card[] nHand = new Card[cards.length+1];
         int counter = 0;
         while(added == false && counter<cards.length){
-            if(c.suit<cards[counter].suit && c.value<cards[counter].value){
+            if(c.suit<cards[counter].suit||(c.suit<=cards[counter].suit && c.value<cards[counter].value)){
                 added = true;
                 nHand[counter]=c;
             }
