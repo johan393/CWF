@@ -9,8 +9,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -127,8 +129,10 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(panel,nameentry,"Name Settings",JOptionPane.PLAIN_MESSAGE);
 
             players[0]=playerInput.getText();
+            ((JLabel)panel.ScoreList.getComponent(0)).setText("   " + playerInput.getText()+ "   ");
             for(int i=1;i<people;i++){
                 players[i]=compInput[i].getText();
+                ((JLabel)panel.ScoreList.getComponent(i)).setText("   " + compInput[i].getText()+ "   ");
             }
             writesettings();
         }});
@@ -179,16 +183,18 @@ public class MainFrame extends javax.swing.JFrame {
                 
                 ////
                 JPanel cftab = new JPanel();
-                JPanel cfsub = new JPanel();
-                cfsub.setLayout(new BorderLayout());
-                JButton cfbutton = new JButton("Save This Choice");
+
+                cftab.setLayout(new GridBagLayout());
                 
-                cftab.setLayout(new FlowLayout());
+                JButton cfbutton = new JButton("Save This Choice");
+                GridBagConstraints con = new GridBagConstraints();
+                
                 String[] cfList = new String[]{"basic", "ornamental"};
                 JList cflist = new JList(cfList);
                 cflist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 cflist.setFixedCellWidth(250);
                 cflist.setFixedCellHeight(235/cfList.length);
+                cfbutton.setPreferredSize(new Dimension(250,25));
                 
                 cflist.addListSelectionListener(new ListSelectionListener(){
                     @Override
@@ -197,7 +203,7 @@ public class MainFrame extends javax.swing.JFrame {
                             cftab.remove(aos);
                             aos = new JLabel(new ImageIcon(("themes\\" + cflist.getSelectedValue() + "\\1_1.png")));
                             System.out.println(cflist.getSelectedValue());   
-                            cftab.add(aos);
+                            cftab.add(aos, con);
                             themeselector.revalidate();
                         }
                     }
@@ -205,18 +211,41 @@ public class MainFrame extends javax.swing.JFrame {
                 cfbutton.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
                         frontTheme = (String) cflist.getSelectedValue();
-                        panel.bg = new ImageIcon("themes\\" + MainFrame.frontTheme + "\\bg.png").getImage();
+                        
+                        for(int i = 0; i<panel.hand[0].cards.length; i++){
+                            if(panel.hand[0].cards[i]!=null){
+                                panel.hand[0].cards[i].setCard('p');
+                            }
+                        }
+                        
+                        for(int i = 0; i<people; i++){
+                            if(panel.trick.cards[i]!=null){
+                                panel.trick.cards[i].setCard('p');
+                            }
+                        }
                         panel.repaint();
                     }
                 });
                 
                 
+
+                con.gridx=0;
+                con.gridy=0;
+                con.gridheight=11;
+                con.gridwidth=3;
                 
-                cfsub.add(cflist, BorderLayout.NORTH);
-                cfsub.add(cfbutton, BorderLayout.SOUTH);
+                cftab.add(cflist, con);
+
+                con.gridy=12;
+                con.gridheight=1;
+                cftab.add(cfbutton, con);
                 aos =  new JLabel(new ImageIcon("themes\\" + frontTheme + "\\1_1.png"));
-                cftab.add(cfsub);
-                cftab.add(aos);
+                
+                con.insets=new Insets(70,95,50,85);
+                con.gridx=6;
+                con.gridy=5;
+
+                cftab.add(aos,con);
                 ////
                 themeselector.addTab("Background", bgtab);
                 themeselector.addTab("Cards", cftab);

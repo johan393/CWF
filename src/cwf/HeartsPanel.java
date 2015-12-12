@@ -150,7 +150,6 @@ public class HeartsPanel extends javax.swing.JPanel {
     });
         
         
-        
     }
    public void newRound(){
         deck=new Deck();
@@ -394,9 +393,57 @@ public class HeartsPanel extends javax.swing.JPanel {
          c.gridx=i;
          ScoreList.add(new JLabel(Integer.toString(pts[i])), c);
      }
+     boolean end = false;
+     for(int i=0;i<people;i++){
+         if(pts[i]>=100){
+             c.gridy=roundcount+1;
+             c.gridx = i;
+             ScoreList.add(new JLabel("LOSER"), c);
+             end = true;
+         }
+     }
      
+     if(end){
+         int lowscore = 200;
+         for(int i = 0; i< people; i++){
+             if(pts[i]<lowscore){
+                 lowscore = pts[i];
+             }
+         }
+         
+         for(int i = 0; i<people; i++){
+             if(pts[i] == lowscore){
+                 c.gridy = roundcount+1;
+                 c.gridx=i;
+                 ScoreList.add(new JLabel("WINNER"),c);
+             }
+         }
+     }
+    
      JOptionPane.showMessageDialog(this,ScoreList,"Scores",JOptionPane.PLAIN_MESSAGE);
+     
+     if(end){
+        piles=new ArrayList[people];
+        pts=new int[people];
+        for(int i=0;i<people;i++){
+            piles[i]=new ArrayList<>();
+        }
+        
+        ScoreList=new JPanel();
+        ScoreList.setLayout(new GridBagLayout());
+        c.gridy=0;
+        for(int i=0; i < players.length; i++){
+            c.gridx=i;
+            ScoreList.add(new JLabel("   " + players[i] + "   "), c);
+        }
+        
+        passDirection = "Left";
+        newRound();
+        
+     }
+     else{
      newRound();
+     }
      
  }
  
