@@ -185,7 +185,13 @@ public class HeartsPanel extends javax.swing.JPanel {
         start = false;
         qplayed = false;
 
+        if(!passDirection.equals("K")){
         pass();
+        }
+        else{
+        passphase = false;
+        passDirection = "Left";    
+        }
         
         person = getFirstPlayer();///the person to lead the two of clubs
         
@@ -196,13 +202,14 @@ public class HeartsPanel extends javax.swing.JPanel {
        passbutton.setText("Pass 3 Cards " + passDirection);
        passbutton.setBounds(JTimer.iposx[0]-40, JTimer.iposy[0] + 20, 160, 40);
        center.add(passbutton);
+       center.repaint();
        
        passcards = new Card[people][3];
        
        for(int i = 1; i<people; i++){//everybody except the player
            passcards[i]=getPassCards(i);
        }
-       System.out.println("synch");
+
         synchronized(lock){//wait for player to select the cards to pass
             try{
                 System.out.println("bwait1");
@@ -214,7 +221,6 @@ public class HeartsPanel extends javax.swing.JPanel {
                 System.out.println("error waiting for passbutton");
             }
         }
-        System.out.println("MMM"+passcards[0][0].suit);
         passphase = false;
         passcards[0][0].deselect();
         passcards[0][1].deselect();
@@ -243,7 +249,57 @@ public class HeartsPanel extends javax.swing.JPanel {
                         }});
                 }
                 hand[0].addCards(passcards[3]);
-                passDirection = "right";
+                passDirection = "Right";
+                passbutton.setText("OK");
+            }
+            else if(passDirection.equals("Right")){
+                hand[3].addCards(passcards[0]);
+                hand[2].addCards(passcards[3]);
+                hand[1].addCards(passcards[2]);
+                for(int i = 0; i<3; i++){
+                    passcards[1][i].select();
+                    passcards[1][i].addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            if(person==0){
+                                try{
+                                    synchronized(lock){
+                                        playercard = (Card) e.getSource();
+                                        lock.notify();
+                                }
+                                    }
+                                catch(Exception E){
+                                      System.out.println("Button failed to notify main thread");  
+                                }
+                            }
+                        }});
+                }
+                hand[0].addCards(passcards[1]);
+                passDirection = "Across";
+                passbutton.setText("OK");
+            }
+            else if(passDirection.equals("Across")){
+                hand[3].addCards(passcards[1]);
+                hand[2].addCards(passcards[0]);
+                hand[1].addCards(passcards[3]);
+                for(int i = 0; i<3; i++){
+                    passcards[2][i].select();
+                    passcards[2][i].addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            if(person==0){
+                                try{
+                                    synchronized(lock){
+                                        playercard = (Card) e.getSource();
+                                        lock.notify();
+                                }
+                                    }
+                                catch(Exception E){
+                                      System.out.println("Button failed to notify main thread");  
+                                }
+                            }
+                        }});
+                }
+                hand[0].addCards(passcards[2]);
+                passDirection = "K";
                 passbutton.setText("OK");
             }
         }

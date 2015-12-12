@@ -53,6 +53,7 @@ public class MainFrame extends javax.swing.JFrame {
     public static String bgtheme;
     public static String buttonColor;
     public static JLabel samp;
+    public static JLabel aos;
 
     HeartsPanel panel;
     JMenuBar menuBar;
@@ -133,7 +134,7 @@ public class MainFrame extends javax.swing.JFrame {
         }});
 
         
-        JMenuItem themes = new JMenuItem("Themes");
+        JMenuItem themes = new JMenuItem("Modify Themes");
         themes.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 JTabbedPane themeselector = new JTabbedPane();
@@ -143,7 +144,6 @@ public class MainFrame extends javax.swing.JFrame {
                 JButton bgbutton = new JButton("Save This Choice");
                 
                 bgtab.setLayout(new FlowLayout());
-                bgtab.setBackground(Color.white);
                 String[] bgList = new String[]{"blue", "charcoal", "green", "green ice", "ice", "lightning", "marble", "white"};
                 JList bglist = new JList(bgList);
                 bglist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -176,7 +176,50 @@ public class MainFrame extends javax.swing.JFrame {
                 samp =  new JLabel(new ImageIcon("themes\\" + bgtheme + "\\sample.png"));
                 bgtab.add(bgsub);
                 bgtab.add(samp);
+                
+                ////
+                JPanel cftab = new JPanel();
+                JPanel cfsub = new JPanel();
+                cfsub.setLayout(new BorderLayout());
+                JButton cfbutton = new JButton("Save This Choice");
+                
+                cftab.setLayout(new FlowLayout());
+                String[] cfList = new String[]{"basic", "ornamental"};
+                JList cflist = new JList(cfList);
+                cflist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                cflist.setFixedCellWidth(250);
+                cflist.setFixedCellHeight(235/cfList.length);
+                
+                cflist.addListSelectionListener(new ListSelectionListener(){
+                    @Override
+                    public void valueChanged(ListSelectionEvent e) {
+                        if(!cflist.getValueIsAdjusting()){
+                            cftab.remove(aos);
+                            aos = new JLabel(new ImageIcon(("themes\\" + cflist.getSelectedValue() + "\\1_1.png")));
+                            System.out.println(cflist.getSelectedValue());   
+                            cftab.add(aos);
+                            themeselector.revalidate();
+                        }
+                    }
+                });
+                cfbutton.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        frontTheme = (String) cflist.getSelectedValue();
+                        panel.bg = new ImageIcon("themes\\" + MainFrame.frontTheme + "\\bg.png").getImage();
+                        panel.repaint();
+                    }
+                });
+                
+                
+                
+                cfsub.add(cflist, BorderLayout.NORTH);
+                cfsub.add(cfbutton, BorderLayout.SOUTH);
+                aos =  new JLabel(new ImageIcon("themes\\" + frontTheme + "\\1_1.png"));
+                cftab.add(cfsub);
+                cftab.add(aos);
+                ////
                 themeselector.addTab("Background", bgtab);
+                themeselector.addTab("Cards", cftab);
                 JOptionPane.showMessageDialog(panel,themeselector,"Pick Your Theme",JOptionPane.PLAIN_MESSAGE);
                 
                 writesettings();
