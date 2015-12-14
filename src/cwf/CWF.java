@@ -14,9 +14,15 @@ public class CWF {
     /**
      * @param args the command line arguments
      */
+    
+    public static String dir;
+    
     public static void main(String[] args) {
+        
+       dir = CWF.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
        MainFrame main = new MainFrame();
+       
        main.setVisible(true);
        //main.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
        main.Game();       

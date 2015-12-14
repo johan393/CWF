@@ -68,7 +68,7 @@ public class Center extends javax.swing.JPanel{
             JTimer.dx=(JTimer.posx[position]-JTimer.x)/160;
             JTimer.dy=(JTimer.posy[position]-JTimer.y)/160;
         }
-        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage("themes\\" + MainFrame.frontTheme + "\\" + card.loc);
+        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage(CWF.dir + "themes\\" + MainFrame.frontTheme + "\\" + card.loc);
         JTimer.player = position;
         JTimer.direction = 1;
                 
@@ -134,7 +134,7 @@ public class Center extends javax.swing.JPanel{
         task = new JTimer(this, people);
         JTimer.x=JTimer.posx[position];
         JTimer.y=JTimer.posy[position];
-        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage("themes\\" + MainFrame.theme + "\\base.png");
+        JTimer.animatedCard=Toolkit.getDefaultToolkit().getImage(CWF.dir + "themes\\" + MainFrame.theme + "\\base.png");
         
         if(this.people==4&&(position==0|position==2)){
             JTimer.dx=(JTimer.iposx[position]-JTimer.x)/110;

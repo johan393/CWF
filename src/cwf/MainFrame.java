@@ -66,6 +66,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame() {
         super();
+        
         loadsettings();
         initComponents();
 
@@ -293,7 +294,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public void loadsettings(){
         try{
-            FileReader filein = new FileReader("settings.ini");
+            FileReader filein = new FileReader(CWF.dir + "settings.ini");
             BufferedReader in = new BufferedReader(filein);
             people = Integer.parseInt(in.readLine());
             players = new String[people];
@@ -316,7 +317,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public void writesettings(){
         try{
-            FileWriter fileout = new FileWriter("settings.ini");
+            FileWriter fileout = new FileWriter(CWF.dir + "settings.ini");
             BufferedWriter out = new BufferedWriter(fileout);
             out.write(Integer.toString(people));
             out.write(System.lineSeparator());
