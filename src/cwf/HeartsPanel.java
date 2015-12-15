@@ -82,7 +82,7 @@ public class HeartsPanel extends javax.swing.JPanel {
         this.people=people;
         hand = new Hand[people]; 
         center = new Center(people, d);
-        bg=new ImageIcon(CWF.dir + "themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
+        bg=new ImageIcon("themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
         this.setDoubleBuffered(true);
         piles=new ArrayList[people];
         pts=new int[people];

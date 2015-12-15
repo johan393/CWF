@@ -18,10 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -171,6 +169,7 @@ public class MainFrame extends javax.swing.JFrame {
                 bgbutton.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
                         bgtheme = "bg-" + bglist.getSelectedValue();
+                        panel.bg.flush();
                         panel.bg = new ImageIcon("themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
                         panel.repaint();
                     }
@@ -294,7 +293,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public void loadsettings(){
         try{
-            FileReader filein = new FileReader(CWF.dir + "settings.ini");
+            FileReader filein = new FileReader("settings.ini");
             BufferedReader in = new BufferedReader(filein);
             people = Integer.parseInt(in.readLine());
             players = new String[people];
@@ -317,7 +316,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public void writesettings(){
         try{
-            FileWriter fileout = new FileWriter(CWF.dir + "settings.ini");
+            FileWriter fileout = new FileWriter("settings.ini");
             BufferedWriter out = new BufferedWriter(fileout);
             out.write(Integer.toString(people));
             out.write(System.lineSeparator());

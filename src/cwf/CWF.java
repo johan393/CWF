@@ -5,6 +5,8 @@
  */
 package cwf;
 
+import java.net.URLDecoder;
+
 /**
  *
  * @author BeerSmokinGenius
@@ -19,8 +21,14 @@ public class CWF {
     
     public static void main(String[] args) {
         
-       dir = CWF.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-
+        /*try{
+       dir = URLDecoder.decode(CWF.class.getProtectionDomain().getCodeSource().getLocation().getPath().replace("CWF.jar", ""), "UTF-8");
+        }
+        catch(Exception e){
+            System.out.println("encode error");
+        }
+        System.out.println(dir);
+        */
        MainFrame main = new MainFrame();
        
        main.setVisible(true);

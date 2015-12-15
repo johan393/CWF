@@ -35,10 +35,10 @@ public class Card extends javax.swing.JButton{
     void setCard(char x){
         disp=x;
         if(x=='p'){
-           this.setIcon(new ImageIcon(CWF.dir + "themes\\" + MainFrame.frontTheme + "\\" + loc));
+           this.setIcon(new ImageIcon("themes\\" + MainFrame.frontTheme + "\\" + loc));
         }
         else{
-           this.setIcon(new ImageIcon(CWF.dir + "themes\\" + MainFrame.theme + "\\" + x + ".png"));
+           this.setIcon(new ImageIcon("themes\\" + MainFrame.theme + "\\" + x + ".png"));
         }
        
         
