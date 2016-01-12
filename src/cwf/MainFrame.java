@@ -56,6 +56,8 @@ public class MainFrame extends javax.swing.JFrame {
     public static String buttonColor;
     public static JLabel samp;
     public static JLabel aos;
+    public static int game;
+    public static int platform;
 
     HeartsPanel panel;
     JMenuBar menuBar;
@@ -76,7 +78,7 @@ public class MainFrame extends javax.swing.JFrame {
         this.setSize(screenSize);
         this.setLayout(new BorderLayout());
 
-
+        System.out.println(players);
         panel = new HeartsPanel(people,screenSize, players);
         panel.setPreferredSize(screenSize);
         menuBar = new JMenuBar();
@@ -287,6 +289,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void Game(){
+        
         panel.newRound();
         revalidate();
         repaint();
@@ -294,7 +297,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public void loadsettings(){
         try{
-            FileReader filein = new FileReader(CWF.dir + "settings.ini");
+            FileReader filein = new FileReader("settings.ini");
             BufferedReader in = new BufferedReader(filein);
             people = Integer.parseInt(in.readLine());
             players = new String[people];
@@ -305,6 +308,8 @@ public class MainFrame extends javax.swing.JFrame {
             frontTheme = in.readLine();
             bgtheme = in.readLine();
             buttonColor = in.readLine();
+            game = Integer.parseInt(in.readLine());
+            platform = Integer.parseInt(in.readLine());
             in.close();
             filein.close();
         }
@@ -317,7 +322,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public void writesettings(){
         try{
-            FileWriter fileout = new FileWriter(CWF.dir + "settings.ini");
+            FileWriter fileout = new FileWriter("settings.ini");
             BufferedWriter out = new BufferedWriter(fileout);
             out.write(Integer.toString(people));
             out.write(System.lineSeparator());
@@ -332,6 +337,10 @@ public class MainFrame extends javax.swing.JFrame {
             out.write(bgtheme);
             out.write(System.lineSeparator());
             out.write(buttonColor);
+            out.write(System.lineSeparator());
+            out.write(game);
+            out.write(System.lineSeparator());
+            out.write(platform);
             out.write(System.lineSeparator());
             out.close();
             fileout.close();

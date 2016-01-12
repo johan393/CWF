@@ -20,7 +20,7 @@ public class CWF {
     public static void main(String[] args) {
         
        dir = CWF.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-
+        System.out.println(dir);
        MainFrame main = new MainFrame();
        
        main.setVisible(true);

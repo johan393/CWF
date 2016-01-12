@@ -34,7 +34,7 @@ import javax.swing.JLabel;
  *
  * @author BeerSmokinGenius
  */
-public class HeartsPanel extends javax.swing.JPanel {
+public class NetHeartsPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form HeartsPanel
@@ -70,7 +70,7 @@ public class HeartsPanel extends javax.swing.JPanel {
     boolean qplayed;
     
     
-    public HeartsPanel(int people, Dimension d, String[] players) {
+    public NetHeartsPanel(int people, Dimension d, String[] players) {
        // super();
         //System.out.println(CWF.dir);
         initComponents();
