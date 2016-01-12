@@ -18,10 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -173,6 +171,7 @@ public class MainFrame extends javax.swing.JFrame {
                 bgbutton.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
                         bgtheme = "bg-" + bglist.getSelectedValue();
+                        panel.bg.flush();
                         panel.bg = new ImageIcon("themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
                         panel.repaint();
                     }
