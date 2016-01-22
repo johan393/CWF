@@ -30,8 +30,8 @@ public class Client {
     static public String[] ips;
     static boolean host = false;
     
-    public static void connect() {
-
+    public static Socket[] connect() {
+        Socket[] rsock = new Socket[1];
         
         try{
             int lobbycount = 2;
@@ -98,39 +98,46 @@ public class Client {
                 
                 for(int i = 0; i<lobbycount-1; i++){//subtract 1 due to him bein the host!
                     clients[i] = hostSocket.accept();
-                    System.out.println("error here");
-                    outs[i] = new PrintWriter(clients[i].getOutputStream());
-                    outs[i].println("connected to host");
-                    outs[i].flush();
-                    
-
                 }
                 d.deletePortMapping(7124,"TCP");//all clients have connected
-                while(true){
-                    
-                }
                 
+                rsock = clients;
                 
             }
             
-            else{
+             else{
                 System.out.println("client");
                 for(int i=0;i<lobbycount; i++){
                     buffer =  in.readLine();
                     temp = buffer.split(":");
-                    ips[i] = temp[1].substring(1);
+                    ips[i] = temp[0].substring(1);
                     System.out.println(ips[i]);
                 }
 
-                while((buffer = in.readLine())!=null){
-                    System.out.println("b" + buffer);
-                }
+                //close connection to site, try to connect to host
+                in.close();
+                sock.close();
+                
+                sock = new Socket();
+                
+                //InetAddress hostip = InetAddress.getByName(ips[0]);
+                InetAddress hostip = InetAddress.getByName("66.41.211.97");
+                System.out.println("trying to connect to " + ips[0]);
+                SocketAddress hostaddress = new InetSocketAddress(hostip, 7124);
+                System.out.println("connecting to host");
+                Thread.sleep(5500);
+                sock.connect(hostaddress);;
+                
+                Socket[] hostsoc = new Socket[1];
+                hostsoc[0] = sock;
+                rsock = hostsoc;
             }
         }
         catch(Exception e){
             e.printStackTrace();
         }
-   
+        return rsock;
+        
     }
     
 }

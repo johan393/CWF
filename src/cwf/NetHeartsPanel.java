@@ -15,8 +15,12 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import static java.lang.Thread.currentThread;
 import java.lang.reflect.Field;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,11 +74,31 @@ public class NetHeartsPanel extends javax.swing.JPanel {
     boolean qplayed;
     
     
-    public NetHeartsPanel(int people, Dimension d, String[] players) {
+    Socket[] cli;
+    PrintWriter[] outs;
+    BufferedReader[] ins;
+    
+    
+    public NetHeartsPanel(int people, Dimension d, String name) { // this is the host panel
        // super();
         //System.out.println(CWF.dir);
+        players = new String[people];
         initComponents();
+        players[0] = name;
+        cli = Client.connect();
+        try{
+        for(int i = 0; i< cli.length; i++){
+            outs[i] = new PrintWriter(cli[i].getOutputStream());
+            ins[i] = new BufferedReader(new InputStreamReader(cli[i].getInputStream()));
+            players[i+1] = ins[i].readLine();
+            outs[i].println(name);
+        }
+        }
+        catch(Exception e){
+            System.out.println("could not create connections ");
+        }
         lock = new Object();
+        
         this.d = d;
         roundcount = 0;
         setLayout(new java.awt.BorderLayout());
@@ -211,10 +235,7 @@ public class NetHeartsPanel extends javax.swing.JPanel {
 
         synchronized(lock){//wait for player to select the cards to pass
             try{
-                System.out.println("bwait1");
             lock.wait();
-            System.out.println("bwait2");
-                
             }
             catch(Exception e){
                 System.out.println("error waiting for passbutton");
