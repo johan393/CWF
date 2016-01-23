@@ -53,5 +53,10 @@ public class Card extends javax.swing.JButton{
         this.select = false;
         this.setBorder(BorderFactory.createEmptyBorder());
     }
+    
+    Card(char x){//creates a dummy card to hold a place
+        super();
+        this.setIcon(new ImageIcon("themes\\" + MainFrame.theme + "\\" + x + ".png"));
+    }
 }
 

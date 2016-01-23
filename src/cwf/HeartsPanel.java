@@ -73,7 +73,6 @@ public class HeartsPanel extends javax.swing.JPanel {
     public HeartsPanel(int people, Dimension d, String[] players) {
        // super();
         //System.out.println(CWF.dir);
-        initComponents();
         lock = new Object();
         this.d = d;
         roundcount = 0;

@@ -38,7 +38,7 @@ import javax.swing.JLabel;
  *
  * @author BeerSmokinGenius
  */
-public class NetHeartsPanel extends javax.swing.JPanel {
+public class HostHeartsPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form HeartsPanel
@@ -79,13 +79,14 @@ public class NetHeartsPanel extends javax.swing.JPanel {
     BufferedReader[] ins;
     
     
-    public NetHeartsPanel(int people, Dimension d, String name) { // this is the host panel
+    public HostHeartsPanel(int people, Dimension d, String name) { // this is the host panel
        // super();
-        //System.out.println(CWF.dir);
         players = new String[people];
         initComponents();
         players[0] = name;
         cli = Client.connect();
+        outs = new PrintWriter[people-1];
+        ins = new BufferedReader[people-1];
         try{
         for(int i = 0; i< cli.length; i++){
             outs[i] = new PrintWriter(cli[i].getOutputStream());

@@ -58,7 +58,7 @@ public class MainFrame extends javax.swing.JFrame {
     public static int platform;
 
     HeartsPanel panel;
-    NetHeartsPanel np;
+    HostHeartsPanel np;
     JMenuBar menuBar;
     String[] players;
 
@@ -83,7 +83,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
         else{
             System.out.println(players[0]);
-            np = new NetHeartsPanel(people, screenSize, players[0]);
+            np = new HostHeartsPanel(people, screenSize, players[0]);
         }
         panel.setPreferredSize(screenSize);
         menuBar = new JMenuBar();
