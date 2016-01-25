@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.net.Socket;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,10 +58,11 @@ public class MainFrame extends javax.swing.JFrame {
     public static int game;
     public static int platform;
 
-    HeartsPanel panel;
+    GamePanel panel;
     HostHeartsPanel np;
     JMenuBar menuBar;
     String[] players;
+    
 
     int people;
     char type;
@@ -82,8 +84,13 @@ public class MainFrame extends javax.swing.JFrame {
             panel = new HeartsPanel(people,screenSize, players);
         }
         else{
-            System.out.println(players[0]);
-            np = new HostHeartsPanel(people, screenSize, players[0]);
+            Socket[] cli = Client.connect();
+            if(Client.host){
+                panel = new HostHeartsPanel(people,screenSize, players[0], cli);
+            }
+            else{
+                panel = new ClientHeartsPanel(people,screenSize, players[0], cli);
+            }
         }
         panel.setPreferredSize(screenSize);
         menuBar = new JMenuBar();
@@ -137,10 +144,10 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(panel,nameentry,"Name Settings",JOptionPane.PLAIN_MESSAGE);
 
             players[0]=playerInput.getText();
-            ((JLabel)panel.ScoreList.getComponent(0)).setText("   " + playerInput.getText()+ "   ");
+            ((JLabel)panel.getScoreList().getComponent(0)).setText("   " + playerInput.getText()+ "   ");
             for(int i=1;i<people;i++){
                 players[i]=compInput[i].getText();
-                ((JLabel)panel.ScoreList.getComponent(i)).setText("   " + compInput[i].getText()+ "   ");
+                ((JLabel)panel.getScoreList().getComponent(i)).setText("   " + compInput[i].getText()+ "   ");
             }
             writesettings();
         }});
@@ -284,12 +291,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         this.setJMenuBar(menuBar);
         
-        if(platform==0){
-            this.add(panel);
-        }
-        else{
-            this.add(np);
-        }
+        this.add(panel);
 
         this.setResizable(false);
         //this.pack();

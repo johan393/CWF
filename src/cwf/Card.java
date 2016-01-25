@@ -58,5 +58,8 @@ public class Card extends javax.swing.JButton{
         super();
         this.setIcon(new ImageIcon("themes\\" + MainFrame.theme + "\\" + x + ".png"));
     }
+    Card(){//creates a dummy card to hold a place
+        super();
+    }
 }
 

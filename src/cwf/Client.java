@@ -43,7 +43,7 @@ public class Client {
             
             SocketAddress sockaddress = new InetSocketAddress(site, port);
             
-            sock.connect(sockaddress);
+            sock.connect(sockaddress);//con to site
             BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
             String buffer;
             
@@ -64,7 +64,7 @@ public class Client {
                 }
                 
                 in.close();
-                sock.close();
+                sock.close();//done with server, we have our 3 other players
                 //forward the necessary port to this pc
                 
                 GatewayDiscover discover = new GatewayDiscover();
@@ -90,8 +90,8 @@ public class Client {
                 //open connections for non-host clients
                 
                 
-                Socket[] clients = new Socket[lobbycount];
-                PrintWriter[] outs = new PrintWriter[lobbycount];
+                Socket[] clients = new Socket[lobbycount-1];
+                PrintWriter[] outs = new PrintWriter[lobbycount-1];
            
                 
                 ServerSocket hostSocket = new ServerSocket(7124,0,InetAddress.getLocalHost());
@@ -101,7 +101,7 @@ public class Client {
                 }
                 d.deletePortMapping(7124,"TCP");//all clients have connected
                 
-                rsock = clients;
+                rsock = clients;//pass client connections to game panel
                 
             }
             

@@ -38,7 +38,7 @@ import javax.swing.JLabel;
  *
  * @author BeerSmokinGenius
  */
-public class HostHeartsPanel extends javax.swing.JPanel {
+public class HostHeartsPanel extends GamePanel {
 
     /**
      * Creates new form HeartsPanel
@@ -79,21 +79,24 @@ public class HostHeartsPanel extends javax.swing.JPanel {
     BufferedReader[] ins;
     
     
-    public HostHeartsPanel(int people, Dimension d, String name) { // this is the host panel
+    public HostHeartsPanel(int people, Dimension d, String name, Socket[] cli) { // this is the host panel
        // super();
         players = new String[people];
         initComponents();
         players[0] = name;
-        cli = Client.connect();
+        this.cli = cli;
         outs = new PrintWriter[people-1];
         ins = new BufferedReader[people-1];
         try{
         for(int i = 0; i< cli.length; i++){
             outs[i] = new PrintWriter(cli[i].getOutputStream());
             ins[i] = new BufferedReader(new InputStreamReader(cli[i].getInputStream()));
-            players[i+1] = ins[i].readLine();
-            outs[i].println(name);
+            players[i+1] = ins[i].readLine();//get the names
         }
+        for(int i = 0; i< cli.length; i++){
+            for(int j = 0; j<people; j++)
+                outs[i].println(players[j]);
+            }
         }
         catch(Exception e){
             System.out.println("could not create connections ");
@@ -145,7 +148,7 @@ public class HostHeartsPanel extends javax.swing.JPanel {
             if(passphase){
                 System.out.println(hand[0].getSelectedCount());
             if(hand[0].getSelectedCount()==3){
-                passcards[0]=hand[0].getSelectedCards(true);
+                passcards[0]=hand[0].getSelectedCards(true);//puts the 3 cards
                 
                 synchronized(lock){
                     System.out.println(" block   ");
@@ -687,6 +690,10 @@ public void displayScores(){
         }
         return p;
         }
+    
+    public JPanel getScoreList(){
+        return ScoreList;
+    }
 }
 
 
