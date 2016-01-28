@@ -93,7 +93,7 @@ public class HostHeartsPanel extends GamePanel {
             ins[i] = new BufferedReader(new InputStreamReader(cli[i].getInputStream()));
             players[i+1] = ins[i].readLine();//get the names
         }
-        for(int i = 0; i< cli.length; i++){
+        for(int i = 0; i< cli.length; i++){//give everybody everyone else's name
             for(int j = 0; j<people; j++)
                 outs[i].println(players[j]);
             }
@@ -187,7 +187,11 @@ public class HostHeartsPanel extends GamePanel {
         
         if(people==4){
             Card[][] hands = deck.stddeal(4);
-            
+            for(int i = 1; i<people;i++){
+                for(int j = 0; j<13; j++){
+                    outs[i-1].println(hands[i][j].value + ":" + hands[i][j].suit);
+                }
+            }
             
             hand[0]=new Hand(hands[0], 'p');
             hand[1]=new Hand(hands[1], 'l');
@@ -199,6 +203,8 @@ public class HostHeartsPanel extends GamePanel {
             this.add(hand[3], BorderLayout.EAST);
             
         }
+        
+
         setCardListeners();
         trick=new Trick(people);
         
@@ -213,11 +219,17 @@ public class HostHeartsPanel extends GamePanel {
         qplayed = false;
 
         if(!passDirection.equals("K")){
-        pass();
+            for(int i = 0; i< cli.length; i++){
+                outs[i].println("p");
+            }
+            pass();
         }
         else{
-        passphase = false;
-        passDirection = "Left";    
+            for(int i = 0; i< cli.length; i++){
+                outs[i].println("n");
+            }
+            passphase = false;
+            passDirection = "Left";    
         }
         
         person = getFirstPlayer();///the person to lead the two of clubs
@@ -252,9 +264,21 @@ public class HostHeartsPanel extends GamePanel {
         
         if(people == 4){
             if(passDirection.equals("Left")){
+                
                 hand[1].addCards(passcards[0]);
+                outs[0].println(passcards[0][0].value + ":" + passcards[0][0].suit);
+                outs[0].println(passcards[0][1].value + ":" + passcards[0][1].suit);
+                outs[0].println(passcards[0][2].value + ":" + passcards[0][2].suit);
+                
                 hand[2].addCards(passcards[1]);
+                outs[1].println(passcards[1][0].value + ":" + passcards[1][0].suit);
+                outs[1].println(passcards[1][1].value + ":" + passcards[1][1].suit);
+                outs[1].println(passcards[1][2].value + ":" + passcards[1][2].suit);
+                
                 hand[3].addCards(passcards[2]);
+                outs[2].println(passcards[2][0].value + ":" + passcards[2][0].suit);
+                outs[2].println(passcards[2][1].value + ":" + passcards[2][1].suit);
+                outs[2].println(passcards[2][2].value + ":" + passcards[2][2].suit);
                 for(int i = 0; i<3; i++){
                     passcards[3][i].select();
                     passcards[3][i].addActionListener(new ActionListener() {
@@ -278,8 +302,20 @@ public class HostHeartsPanel extends GamePanel {
             }
             else if(passDirection.equals("Right")){
                 hand[3].addCards(passcards[0]);
+                outs[2].println(passcards[0][0].value + ":" + passcards[0][0].suit);
+                outs[2].println(passcards[0][1].value + ":" + passcards[0][1].suit);
+                outs[2].println(passcards[0][2].value + ":" + passcards[0][2].suit);
+                
                 hand[2].addCards(passcards[3]);
+                outs[1].println(passcards[3][0].value + ":" + passcards[3][0].suit);
+                outs[1].println(passcards[3][1].value + ":" + passcards[3][1].suit);
+                outs[1].println(passcards[3][2].value + ":" + passcards[3][2].suit);
+                
                 hand[1].addCards(passcards[2]);
+                outs[0].println(passcards[2][0].value + ":" + passcards[2][0].suit);
+                outs[0].println(passcards[2][1].value + ":" + passcards[2][1].suit);
+                outs[0].println(passcards[2][2].value + ":" + passcards[2][2].suit);
+                
                 for(int i = 0; i<3; i++){
                     passcards[1][i].select();
                     passcards[1][i].addActionListener(new ActionListener() {
@@ -303,8 +339,20 @@ public class HostHeartsPanel extends GamePanel {
             }
             else if(passDirection.equals("Across")){
                 hand[3].addCards(passcards[1]);
+                outs[2].println(passcards[1][0].value + ":" + passcards[1][0].suit);
+                outs[2].println(passcards[1][1].value + ":" + passcards[1][1].suit);
+                outs[2].println(passcards[1][2].value + ":" + passcards[1][2].suit);
+                
                 hand[2].addCards(passcards[0]);
+                outs[1].println(passcards[0][0].value + ":" + passcards[0][0].suit);
+                outs[1].println(passcards[0][1].value + ":" + passcards[0][1].suit);
+                outs[1].println(passcards[0][2].value + ":" + passcards[0][2].suit);
+                
                 hand[1].addCards(passcards[3]);
+                outs[0].println(passcards[3][0].value + ":" + passcards[3][0].suit);
+                outs[0].println(passcards[3][1].value + ":" + passcards[3][1].suit);
+                outs[0].println(passcards[3][2].value + ":" + passcards[3][2].suit);
+                
                 for(int i = 0; i<3; i++){
                     passcards[2][i].select();
                     passcards[2][i].addActionListener(new ActionListener() {
@@ -674,19 +722,28 @@ public void displayScores(){
     }
     
     public Card[] getPassCards(int player){
-        
-        //easy AI
+        String buf;
         Card [] p = new Card[3];
-        Random x = new Random();
-        int r = x.nextInt(hand[player].cards.length); 
+        Card t;
+        String[] temp;
         
+        try{
         for(int i=0; i<3; i++){
-            p[i] = hand[player].cards[r];
-            hand[player].cards[r]=null;
-            if(p[i]==null){
-                i=i-1;
+            buf = ins[player-1].readLine();
+            temp = buf.split(":");
+            p[i] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+            
+            for(int j = 0; j<13; j++){
+                if((hand[player].cards[i].value == Integer.parseInt(temp[0]))&& (hand[player].cards[i].suit == Integer.parseInt(temp[1]))){
+                    p[i] = hand[player].cards[j];
+                    hand[player].cards[j] = null;
+                }
             }
-            r = x.nextInt(hand[player].cards.length);
+        }
+        }
+        catch(Exception e){
+            System.out.println("could not read in a passed card");
+            e.printStackTrace();
         }
         return p;
         }

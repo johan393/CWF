@@ -63,7 +63,7 @@ public class ClientHeartsPanel extends GamePanel {
             in = new BufferedReader(new InputStreamReader(host[0].getInputStream())); 
             out.println(name);
             for(int i = 0; i<people; i++){
-                players[i] = in.readLine();
+                players[i] = in.readLine();//get the names of everybody
             }
         }
         catch(Exception e){
@@ -106,7 +106,7 @@ public class ClientHeartsPanel extends GamePanel {
                 System.out.println(hand[0].getSelectedCount());
             if(hand[0].getSelectedCount()==3){
                 System.out.println("passing 3!");
-                Card[] ca = hand[0].getSelectedCards(true);
+                Card[] ca = hand[0].getSelectedCards(true);//will remove the cards to be passed from the hand automatcially
                 out.println(ca[0].value +":"+ ca[0].suit);//sends the three cards
                 out.println(ca[1].value +":"+ ca[1].suit);
                 out.println(ca[2].value +":"+ ca[2].suit);
@@ -117,7 +117,8 @@ public class ClientHeartsPanel extends GamePanel {
                 for(int i = 0; i<hand[0].cards.length; i++){
                     hand[0].cards[i].deselect();
                 }
-
+            passphase = true;
+            center.remove(passbutton);
             }             
         }
     });
@@ -133,13 +134,27 @@ public class ClientHeartsPanel extends GamePanel {
     
     public void newRound(){
         passphase=true;
+        String[] temp = new String[2];
+        String buf = "";
         
         if(people==4){
-            
-            for(int i =0; i<13; i++)
-            
-            Card[][] hands = deck.stddeal(4);
-            
+            Card[][] hands = new Card[4][13];
+            for(int j =1; j<people; j++){ //j starts at 1 so that cards[0] will be this player's hand
+            for(int i =0; i<13; i++){
+                hands[j][i] = new Card();//sets the cards up in the other hands to be dummy cards
+            }
+            }
+            try{
+            for(int i = 0; i<13; i++){
+                buf = in.readLine();
+                temp = buf.split(":");
+                hands[0][i] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+            }
+            }
+            catch(Exception e){
+                System.out.println("error reading in the dealt cards");
+                e.printStackTrace();
+            }
             
             hand[0]=new Hand(hands[0], 'p');
             hand[1]=new Hand(hands[1], 'l');
@@ -151,24 +166,69 @@ public class ClientHeartsPanel extends GamePanel {
             this.add(hand[3], BorderLayout.EAST);
             
         }
-        setCardListeners();
+        setCardListeners();//this method will need to exist for both client and host, but will add wildly different behavior to the buttons
         trick=new Trick(people);
         
-        for(int i=0;i<people;i++){
-            piles[i].clear();
-        }
         
         revalidate();
         center.pos(d);
-        heartsbroken = false;
-        start = false;
-        qplayed = false;
-
-        if(!passDirection.equals("K")){
-        pass();
+        try{
+            buf = in.readLine();//to pass or not to pass: p = pass, n = no pass
         }
-        else{
-        passphase = false;
-        passDirection = "Left";    
+        catch(Exception e){
+            System.out.println("could not read pass char");
+            e.printStackTrace();
         }
+        if(buf.equals("p")){
+            pass();
+        }
+    }
+    
+    public void pass(){
+       String[] temp = new String[2];
+       String buf = "";
+       passbutton.setText("Pass 3 Cards " + passDirection);
+       passbutton.setBounds(JTimer.iposx[0]-40, JTimer.iposy[0] + 20, 160, 40);
+       center.add(passbutton);
+       center.repaint();
+       Card [] received = new Card[3];
+       //here, the main thread should block until button thread first sends the cards to pass to the host, then receive a message from the host, sending the new cards to us from another player
+       try{
+       buf = in.readLine();
+       temp = buf.split(":");
+       received[0] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+       
+       buf = in.readLine();
+       temp = buf.split(":");
+       received[1] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+       
+       buf = in.readLine();
+       temp = buf.split(":");
+       received[2] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+       }
+       catch(Exception e){
+           System.out.println("error receiving cards that were passed to me");
+           e.printStackTrace();
+       }
+    }
+    public void setCardListeners(){
+       ActionListener ex = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if(passphase){
+                if(((Card)e.getSource()).select){
+                    ((Card)e.getSource()).deselect();
+                }
+                else{
+                    ((Card)e.getSource()).select();
+                }
+            }
+            else{
+                //TODO TO HANDLE REGULAR PLAY
+            }
+        };
+       };
+       for(int i=0;i<hand[0].cards.length;i++){
+           hand[0].cards[i].addActionListener(ex);
+       }
+    }
 }
