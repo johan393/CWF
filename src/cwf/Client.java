@@ -34,7 +34,7 @@ public class Client {
         Socket[] rsock = new Socket[1];
         
         try{
-            int lobbycount = 2;
+            int lobbycount = 4;
             String[] temp = new String[2];
             ips = new String[lobbycount];
             Socket sock = new Socket();
@@ -120,8 +120,8 @@ public class Client {
                 
                 sock = new Socket();
                 
-                InetAddress hostip = InetAddress.getByName(ips[0]);
-                //InetAddress hostip = InetAddress.getByName("66.41.211.97");
+                //InetAddress hostip = InetAddress.getByName(ips[0]);
+                InetAddress hostip = InetAddress.getByName("66.41.211.97");
                 System.out.println("trying to connect to " + ips[0]);
                 SocketAddress hostaddress = new InetSocketAddress(hostip, 7124);
                 System.out.println("connecting to host");
