@@ -120,8 +120,8 @@ public class Client {
                 
                 sock = new Socket();
                 
-                //InetAddress hostip = InetAddress.getByName(ips[0]);
-                InetAddress hostip = InetAddress.getByName("66.41.211.97");
+                InetAddress hostip = InetAddress.getByName(ips[0]);
+                //InetAddress hostip = InetAddress.getByName("66.41.211.97");
                 System.out.println("trying to connect to " + ips[0]);
                 SocketAddress hostaddress = new InetSocketAddress(hostip, 7124);
                 System.out.println("connecting to host");
