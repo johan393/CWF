@@ -13,6 +13,9 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+import org.wetorrent.upnp.GatewayDevice;
+import org.wetorrent.upnp.GatewayDiscover;
+import org.wetorrent.upnp.PortMappingEntry;
 
 
 /**
@@ -100,7 +103,7 @@ public class Client {
                     clients[i] = hostSocket.accept();
                 }
                 d.deletePortMapping(7124,"TCP");//all clients have connected
-                
+                System.out.println("port map deleted");
                 rsock = clients;//pass client connections to game panel
                 
             }
@@ -125,17 +128,19 @@ public class Client {
                 System.out.println("trying to connect to " + ips[0]);
                 SocketAddress hostaddress = new InetSocketAddress(hostip, 7124);
                 System.out.println("connecting to host");
-                Thread.sleep(5500);
-                sock.connect(hostaddress);;
+                Thread.sleep(6000);
+                sock.connect(hostaddress);
                 
                 Socket[] hostsoc = new Socket[1];
                 hostsoc[0] = sock;
                 rsock = hostsoc;
+                System.out.println("connected to host");
             }
         }
         catch(Exception e){
             e.printStackTrace();
         }
+        
         return rsock;
         
     }
