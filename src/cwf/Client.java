@@ -13,9 +13,9 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import org.wetorrent.upnp.GatewayDevice;
-import org.wetorrent.upnp.GatewayDiscover;
-import org.wetorrent.upnp.PortMappingEntry;
+import org.fourthline.cling.UpnpServiceImpl;
+import org.fourthline.cling.support.igd.PortMappingListener;
+import org.fourthline.cling.support.model.PortMapping;
 
 
 /**
@@ -68,26 +68,10 @@ public class Client {
                 
                 in.close();
                 sock.close();//done with server, we have our 3 other players
-                //forward the necessary port to this pc
                 
-                GatewayDiscover discover = new GatewayDiscover();
-                discover.discover();
-                GatewayDevice d = discover.getValidGateway();
-                if (null != d) {
-                    System.out.println("found gateway");
-                }
-                else{
-                    System.out.println("no gateway");
-                }
-                PortMappingEntry portMapping = new PortMappingEntry();
-                /*if (!d.getSpecificPortMappingEntry(7124,"TCP",portMapping)) {
-                    System.out.println("port already forwarded");
-                }
-                else{*/
-                    if (!d.addPortMapping(7124, 7124,InetAddress.getLocalHost().getHostAddress(),"TCP","test")){
-                        System.out.println("port forward suked");
-                    }
-                //}
+                //forward the necessary port to this pc
+                UpnpServiceImpl upnpService = new UpnpServiceImpl(new PortMappingListener(new PortMapping(7124,InetAddress.getLocalHost().getHostAddress(),PortMapping.Protocol.TCP,"My Port Mapping")));
+                upnpService.getControlPoint().search(); 
                 
                 System.out.println("upnp con");
                 //open connections for non-host clients
@@ -102,7 +86,7 @@ public class Client {
                 for(int i = 0; i<lobbycount-1; i++){//subtract 1 due to him bein the host!
                     clients[i] = hostSocket.accept();
                 }
-                d.deletePortMapping(7124,"TCP");//all clients have connected
+                upnpService.shutdown();//all clients have connected, remove port forwarding.......................................................
                 System.out.println("port map deleted");
                 rsock = clients;//pass client connections to game panel
                 
