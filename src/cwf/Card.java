@@ -8,8 +8,6 @@ package cwf;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 
 /**
  *
@@ -57,9 +55,13 @@ public class Card extends javax.swing.JButton{
     Card(char x){//creates a dummy card to hold a place
         super();
         this.setIcon(new ImageIcon("themes\\" + MainFrame.theme + "\\" + x + ".png"));
+        this.setContentAreaFilled(false);
+        this.setBorder(BorderFactory.createEmptyBorder());
     }
     Card(){//creates a dummy card to hold a place
         super();
+        this.setContentAreaFilled(false);
+        this.setBorder(BorderFactory.createEmptyBorder());
     }
 }
 

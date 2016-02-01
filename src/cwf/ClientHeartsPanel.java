@@ -3,6 +3,7 @@ package cwf;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -58,6 +59,7 @@ public class ClientHeartsPanel extends GamePanel {
        // super();
         //System.out.println(CWF.dir);
         this.d = d;
+        players = new String[people];
         try{
             out = new PrintWriter(host[0].getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(host[0].getInputStream())); 
@@ -232,4 +234,8 @@ public class ClientHeartsPanel extends GamePanel {
            hand[0].cards[i].addActionListener(ex);
        }
     }
+    public void paintComponent(Graphics g){
+     super.paintComponent(g);
+     g.drawImage(bg,0,0,null);
+   }
 }
