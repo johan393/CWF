@@ -106,7 +106,6 @@ public class ClientHeartsPanel extends GamePanel {
             if(hand[0].getSelectedCount()==3){
                 System.out.println("passing 3!");
                 Card[] ca = hand[0].getSelectedCards(true);//will remove the cards to be passed from the hand automatcially
-                repaint();
                 out.println(ca[0].value +":"+ ca[0].suit);//sends the three cards
                 out.println(ca[1].value +":"+ ca[1].suit);
                 out.println(ca[2].value +":"+ ca[2].suit);
@@ -179,7 +178,8 @@ public class ClientHeartsPanel extends GamePanel {
             System.out.println("could not read pass char");
             e.printStackTrace();
         }
-        if(buf.equals("p")){
+        if(!buf.equals("n")){
+            passDirection = buf;
             pass();
         }
     }

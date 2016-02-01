@@ -217,7 +217,7 @@ public class HostHeartsPanel extends GamePanel {
 
         if(!passDirection.equals("K")){
             for(int i = 0; i< cli.length; i++){
-                outs[i].println("p");
+                outs[i].println(passDirection);
             }
             pass();
         }
@@ -731,7 +731,7 @@ public void displayScores(){
             System.out.println("rcvd " + player + "  " + buf);
             
             for(int j = 0; j<13; j++){
-                if((hand[player].cards[j].value == Integer.parseInt(temp[0]))&& (hand[player].cards[i].suit == Integer.parseInt(temp[1]))){
+                if((hand[player].cards[j]!=null) && (hand[player].cards[j].value == Integer.parseInt(temp[0]))&& (hand[player].cards[j].suit == Integer.parseInt(temp[1]))){
                     p[i] = hand[player].cards[j];
                     hand[player].cards[j] = null;
                 }
