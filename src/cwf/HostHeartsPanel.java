@@ -44,16 +44,13 @@ public class HostHeartsPanel extends GamePanel {
      * Creates new form HeartsPanel
      */
     //these variables are part of game setup
-    Hand [] hand;
     Deck deck;
     int people;
     Center center;
-    Image bg;
     
     //these variables keep track of gameplay
     ArrayList<Card>[] piles;
     int[] pts;
-    Trick trick;
     int person;
     int roundcount;
     String[] players;
@@ -148,7 +145,7 @@ public class HostHeartsPanel extends GamePanel {
             if(passphase){
                 System.out.println(hand[0].getSelectedCount());
             if(hand[0].getSelectedCount()==3){
-                passcards[0]=hand[0].getSelectedCards(true);//puts the 3 cards
+                passcards[0]=hand[0].getSelectedCards(true);//puts the 3 cards in the passcards thing, removes from hand
                 
                 synchronized(lock){
                     System.out.println(" block   ");
@@ -734,7 +731,7 @@ public void displayScores(){
             p[i] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
             
             for(int j = 0; j<13; j++){
-                if((hand[player].cards[i].value == Integer.parseInt(temp[0]))&& (hand[player].cards[i].suit == Integer.parseInt(temp[1]))){
+                if((hand[player].cards[j].value == Integer.parseInt(temp[0]))&& (hand[player].cards[i].suit == Integer.parseInt(temp[1]))){
                     p[i] = hand[player].cards[j];
                     hand[player].cards[j] = null;
                 }

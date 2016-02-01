@@ -106,6 +106,7 @@ public class ClientHeartsPanel extends GamePanel {
             if(hand[0].getSelectedCount()==3){
                 System.out.println("passing 3!");
                 Card[] ca = hand[0].getSelectedCards(true);//will remove the cards to be passed from the hand automatcially
+                repaint();
                 out.println(ca[0].value +":"+ ca[0].suit);//sends the three cards
                 out.println(ca[1].value +":"+ ca[1].suit);
                 out.println(ca[2].value +":"+ ca[2].suit);
@@ -191,6 +192,8 @@ public class ClientHeartsPanel extends GamePanel {
        center.add(passbutton);
        center.repaint();
        Card [] received = new Card[3];
+       
+       System.out.println("awaiting new cards from pass");
        //here, the main thread should block until button thread first sends the cards to pass to the host, then receive a message from the host, sending the new cards to us from another player
        try{
        buf = in.readLine();
