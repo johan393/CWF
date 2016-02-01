@@ -89,7 +89,7 @@ public class HostHeartsPanel extends GamePanel {
         ins = new BufferedReader[people-1];
         try{
         for(int i = 0; i< cli.length; i++){
-            outs[i] = new PrintWriter(cli[i].getOutputStream());
+            outs[i] = new PrintWriter(cli[i].getOutputStream(), true);
             ins[i] = new BufferedReader(new InputStreamReader(cli[i].getInputStream()));
             players[i+1] = ins[i].readLine();//get the names
         }

@@ -59,9 +59,10 @@ public class ClientHeartsPanel extends GamePanel {
         //System.out.println(CWF.dir);
         this.d = d;
         try{
-            out = new PrintWriter(host[0].getOutputStream());
+            out = new PrintWriter(host[0].getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(host[0].getInputStream())); 
             out.println(name);
+            System.out.println("sent name" + name);
             for(int i = 0; i<people; i++){
                 players[i] = in.readLine();//get the names of everybody
             }
