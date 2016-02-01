@@ -44,7 +44,7 @@ public class HeartsPanel extends GamePanel {
     Deck deck;
     int people;
     Center center;
-    Image bg;
+    //Image bg;
     
     //these variables keep track of gameplay
     ArrayList<Card>[] piles;

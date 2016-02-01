@@ -59,7 +59,6 @@ public class MainFrame extends javax.swing.JFrame {
     public static int platform;
 
     GamePanel panel;
-    HostHeartsPanel np;
     JMenuBar menuBar;
     String[] players;
     
@@ -352,9 +351,9 @@ public class MainFrame extends javax.swing.JFrame {
             out.write(System.lineSeparator());
             out.write(buttonColor);
             out.write(System.lineSeparator());
-            out.write(game);
+            out.write(Integer.toString(game));
             out.write(System.lineSeparator());
-            out.write(platform);
+            out.write(Integer.toString(platform));
             out.write(System.lineSeparator());
             out.close();
             fileout.close();
