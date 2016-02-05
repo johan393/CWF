@@ -253,7 +253,6 @@ public class Hand extends javax.swing.JPanel{
                 selected.add(cards[i]);
                 if(remove){
                 cards[i]= null;
-                this.remove(cards[i]);
                 }
             }
         }
@@ -445,7 +444,6 @@ public class Hand extends javax.swing.JPanel{
             c.gridx=cards.length-1;
             cards[cards.length-1].setCard('f');
             this.add(cards[cards.length-1],c);
-            this.revalidate();
         }
     }
   
