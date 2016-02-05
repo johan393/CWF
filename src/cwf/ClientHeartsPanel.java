@@ -209,7 +209,7 @@ public class ClientHeartsPanel extends GamePanel {
        else{
          received[0] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
        }
-       
+       received[0].select();
        
        buf = in.readLine();
        temp = buf.split(":");
@@ -219,6 +219,7 @@ public class ClientHeartsPanel extends GamePanel {
        else{
          received[1] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
        }
+       received[1].select();
        
        buf = in.readLine();
        temp = buf.split(":");
@@ -228,11 +229,15 @@ public class ClientHeartsPanel extends GamePanel {
        else{
          received[2] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
        }
+       
+       received[2].select();
+       
        }
        catch(Exception e){
            System.out.println("error receiving cards that were passed to me");
            e.printStackTrace();
        }
+       
        hand[0].addCards(received);
     }
     public void setCardListeners(){
