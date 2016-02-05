@@ -252,6 +252,7 @@ public class Hand extends javax.swing.JPanel{
             if(cards[i]!=null&&cards[i].select==true){
                 selected.add(cards[i]);
                 if(remove){
+                this.remove(cards[i]);
                 cards[i]= null;
                 }
             }

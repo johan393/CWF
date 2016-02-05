@@ -203,20 +203,37 @@ public class ClientHeartsPanel extends GamePanel {
        try{
        buf = in.readLine();
        temp = buf.split(":");
-       received[0] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+       if(temp[0].equals("13")){
+         received[0] = new Card(0, Integer.parseInt(temp[1]));
+       }
+       else{
+         received[0] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+       }
+       
        
        buf = in.readLine();
        temp = buf.split(":");
-       received[1] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+       if(temp[0].equals("13")){
+         received[1] = new Card(0, Integer.parseInt(temp[1]));
+       }
+       else{
+         received[1] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+       }
        
        buf = in.readLine();
        temp = buf.split(":");
-       received[2] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+       if(temp[0].equals("13")){
+         received[2] = new Card(0, Integer.parseInt(temp[1]));
+       }
+       else{
+         received[2] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+       }
        }
        catch(Exception e){
            System.out.println("error receiving cards that were passed to me");
            e.printStackTrace();
        }
+       hand[0].addCards(received);
     }
     public void setCardListeners(){
        ActionListener ex = new ActionListener() {
