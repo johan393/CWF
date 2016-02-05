@@ -241,10 +241,6 @@ public class HostHeartsPanel extends GamePanel {
        center.repaint();
        
        passcards = new Card[people][3];
-       
-       for(int i = 1; i<people; i++){//everybody except the player
-           passcards[i]=getPassCards(i);
-       }
 
         synchronized(lock){//wait for player to select the cards to pass
             try{
@@ -254,6 +250,11 @@ public class HostHeartsPanel extends GamePanel {
                 System.out.println("error waiting for passbutton");
             }
         }
+        
+        for(int i = 1; i<people; i++){//everybody except the player
+           passcards[i]=getPassCards(i);
+        }
+        
         passphase = false;
         passcards[0][0].deselect();
         passcards[0][1].deselect();

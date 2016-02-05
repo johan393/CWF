@@ -47,6 +47,7 @@ public class ClientHeartsPanel extends GamePanel {
     JButton passbutton;
     String passDirection;
     boolean passphase;
+    boolean passpressed;
     
     PrintWriter out;
     BufferedReader in;
@@ -90,6 +91,7 @@ public class ClientHeartsPanel extends GamePanel {
         }
         
         passbutton= new JButton();
+        passpressed = false;
         Color color;
         try{
         Field field = Class.forName("java.awt.Color").getField(MainFrame.buttonColor);
@@ -101,6 +103,8 @@ public class ClientHeartsPanel extends GamePanel {
         passbutton.setBackground(color);
         passbutton.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e) {
+            if(!passpressed){
+                passpressed = true;
             if(passphase){
                 System.out.println(hand[0].getSelectedCount());
             if(hand[0].getSelectedCount()==3){
@@ -110,6 +114,7 @@ public class ClientHeartsPanel extends GamePanel {
                 out.println(ca[1].value +":"+ ca[1].suit);
                 out.println(ca[2].value +":"+ ca[2].suit);
                 passphase = false;
+                hand[0].repaint();
             }
         }   
             else{
@@ -119,6 +124,7 @@ public class ClientHeartsPanel extends GamePanel {
             passphase = true;
             center.remove(passbutton);
             }             
+        }
         }
     });
         
@@ -212,6 +218,8 @@ public class ClientHeartsPanel extends GamePanel {
            System.out.println("error receiving cards that were passed to me");
            e.printStackTrace();
        }
+       hand[0].addCards(received);
+       
     }
     public void setCardListeners(){
        ActionListener ex = new ActionListener() {
