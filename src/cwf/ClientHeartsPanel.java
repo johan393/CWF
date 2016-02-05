@@ -219,6 +219,7 @@ public class ClientHeartsPanel extends GamePanel {
            e.printStackTrace();
        }
        hand[0].addCards(received);
+       passpressed = false;
        
     }
     public void setCardListeners(){
