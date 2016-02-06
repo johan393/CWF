@@ -750,6 +750,18 @@ public void displayScores(){
             System.out.println("could not read in a passed card");
             e.printStackTrace();
         }
+        catch(NullPointerException g){
+            System.out.println(player);
+            try{
+            buf = ins[player-1].readLine();
+            System.out.println(buf);
+            buf = ins[player-1].readLine();
+            System.out.println(buf);
+            }
+            catch(Exception e){}
+            
+            g.printStackTrace();
+        }
         return p;
         }
     

@@ -43,6 +43,7 @@ public class ClientHeartsPanel extends GamePanel {
     Dimension d;
     GridBagConstraints c;
     Card playercard;
+    final Object lock;
     
     JButton passbutton;
     String passDirection;
@@ -55,6 +56,7 @@ public class ClientHeartsPanel extends GamePanel {
        // super();
         //System.out.println(CWF.dir);
         this.d = d;
+        lock = new Object();
         players = new String[people];
         try{
             out = new PrintWriter(host[0].getOutputStream(), true);
@@ -110,8 +112,17 @@ public class ClientHeartsPanel extends GamePanel {
                 out.println(ca[1].value +":"+ ca[1].suit);
                 out.println(ca[2].value +":"+ ca[2].suit);
                 passphase = false;
+                synchronized(lock){
+                    System.out.println(" block   ");
+                    try{
+                        lock.notify();
+                    }
+                    catch(Exception ex){
+                        System.out.println("could not notify passing wait");
+                    }
+                }
             }
-        }   
+            }
             else{
                 for(int i = 0; i<hand[0].cards.length; i++){
                     hand[0].cards[i].deselect();
@@ -199,6 +210,14 @@ public class ClientHeartsPanel extends GamePanel {
        Card [] received = new Card[3];
        
        System.out.println("awaiting new cards from pass");
+       synchronized(lock){//wait for player to select the cards to pass
+            try{
+            lock.wait();
+            }
+            catch(Exception e){
+                System.out.println("error waiting for passbutton");
+            }
+        }
        //here, the main thread should block until button thread first sends the cards to pass to the host, then receive a message from the host, sending the new cards to us from another player
        try{
        buf = in.readLine();
