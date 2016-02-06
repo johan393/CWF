@@ -224,6 +224,7 @@ public class ClientHeartsPanel extends GamePanel {
        temp = buf.split(":");
        if(temp[0].equals("13")){
          received[0] = new Card(0, Integer.parseInt(temp[1]));
+         received[0].value=13;
        }
        else{
          received[0] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
@@ -234,6 +235,7 @@ public class ClientHeartsPanel extends GamePanel {
        temp = buf.split(":");
        if(temp[0].equals("13")){
          received[1] = new Card(0, Integer.parseInt(temp[1]));
+         received[1].value=13;
        }
        else{
          received[1] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
@@ -244,6 +246,7 @@ public class ClientHeartsPanel extends GamePanel {
        temp = buf.split(":");
        if(temp[0].equals("13")){
          received[2] = new Card(0, Integer.parseInt(temp[1]));
+         received[2].value=13;
        }
        else{
          received[2] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));

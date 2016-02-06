@@ -64,7 +64,7 @@ public class Deck {
                 count++;
             }
         }
-        Card[][] o = organize(deal);
+        Card[][] o = organize(deal, people);
         return o;
     }
     
@@ -73,12 +73,13 @@ public class Deck {
     }
     
     
-    public Card[][] organize(Card[][] disorganized){
+    public Card[][] organize(Card[][] disorganized, int people){
         int count = 0;
-        
-        while(count+1<disorganized[0].length){
-            if((disorganized[0][count].suit>disorganized[0][count+1].suit)){
-               disorganized = swapCard(0,count,count+1,disorganized);
+        for(int i = 0; i< people; i++){
+        count = 0;
+        while(count+1<disorganized[i].length){
+            if((disorganized[i][count].suit>disorganized[i][count+1].suit)){
+               disorganized = swapCard(i,count,count+1,disorganized);
                count=0;
             }
             else{
@@ -86,14 +87,15 @@ public class Deck {
             }
         }
         count=0;
-        while(count+1<disorganized[0].length){
-            if((disorganized[0][count].value>disorganized[0][count+1].value)&&(disorganized[0][count].suit==disorganized[0][count+1].suit)){
-               disorganized = swapCard(0,count,count+1,disorganized);
+        while(count+1<disorganized[i].length){
+            if((disorganized[i][count].value>disorganized[i][count+1].value)&&(disorganized[i][count].suit==disorganized[i][count+1].suit)){
+               disorganized = swapCard(i,count,count+1,disorganized);
                count=0;
             }
             else{
                 count=count+1;
             }
+        }
         }
         return disorganized;
     }
