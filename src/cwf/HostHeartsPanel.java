@@ -734,8 +734,8 @@ public void displayScores(){
             buf = ins[player-1].readLine();
             temp = buf.split(":");
             System.out.println("rcvd " + player + "  " + buf);
-            if(temp[0].equals("13")){
-                temp[0] = "0";
+            if(temp[0].equals("0")){
+                temp[0] = "13";
             }
             
             for(int j = 0; j<13; j++){
