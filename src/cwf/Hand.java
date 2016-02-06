@@ -352,6 +352,9 @@ public class Hand extends javax.swing.JPanel{
     }
     
     private void addCard(Card c){//one of the ugliest operations... inserting into an array
+        System.out.println(side);
+        System.out.println(c.value + ":" + c.suit);
+        System.out.println(c);
         boolean added = false;
         Card[] nHand = new Card[cards.length+1];
         int counter = 0;

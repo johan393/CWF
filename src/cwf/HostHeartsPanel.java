@@ -16,6 +16,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import static java.lang.Thread.currentThread;
@@ -187,6 +188,7 @@ public class HostHeartsPanel extends GamePanel {
             for(int i = 1; i<people;i++){
                 for(int j = 0; j<13; j++){
                     outs[i-1].println(hands[i][j].value + ":" + hands[i][j].suit);
+                    
                 }
             }
             
@@ -235,12 +237,11 @@ public class HostHeartsPanel extends GamePanel {
     }
    
    public void pass(){
+       passcards = new Card[people][3];
        passbutton.setText("Pass 3 Cards " + passDirection);
        passbutton.setBounds(JTimer.iposx[0]-40, JTimer.iposy[0] + 20, 160, 40);
        center.add(passbutton);
        center.repaint();
-       
-       passcards = new Card[people][3];
 
         synchronized(lock){//wait for player to select the cards to pass
             try{
@@ -254,6 +255,9 @@ public class HostHeartsPanel extends GamePanel {
         for(int i = 1; i<people; i++){//everybody except the player
            passcards[i]=getPassCards(i);
         }
+        /*System.out.println(passcards[2][0].value +":"+passcards[2][0].suit);
+                System.out.println(passcards[2][1].value +":"+passcards[2][1].suit);
+                System.out.println(passcards[2][2].value +":"+passcards[2][2].suit);*/
         
         passphase = false;
         passcards[0][0].deselect();
@@ -274,6 +278,7 @@ public class HostHeartsPanel extends GamePanel {
                 outs[1].println(passcards[1][2].value + ":" + passcards[1][2].suit);
                 
                 hand[3].addCards(passcards[2]);
+                
                 outs[2].println(passcards[2][0].value + ":" + passcards[2][0].suit);
                 outs[2].println(passcards[2][1].value + ":" + passcards[2][1].suit);
                 outs[2].println(passcards[2][2].value + ":" + passcards[2][2].suit);
@@ -722,7 +727,6 @@ public void displayScores(){
     public Card[] getPassCards(int player){
         String buf;
         Card [] p = new Card[3];
-        Card t;
         String[] temp;
         
         try{
@@ -734,12 +738,15 @@ public void displayScores(){
             for(int j = 0; j<13; j++){
                 if((hand[player].cards[j]!=null) && (hand[player].cards[j].value == Integer.parseInt(temp[0]))&& (hand[player].cards[j].suit == Integer.parseInt(temp[1]))){
                     p[i] = hand[player].cards[j];
+                    System.out.println(p[i].value + ":" + p[i].suit);
                     hand[player].cards[j] = null;
                 }
             }
+            System.out.println(player + "  " + p[i].loc);
+            System.out.println("hand" + player);
         }
         }
-        catch(Exception e){
+        catch(IOException e){
             System.out.println("could not read in a passed card");
             e.printStackTrace();
         }
