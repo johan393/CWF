@@ -734,6 +734,9 @@ public void displayScores(){
             buf = ins[player-1].readLine();
             temp = buf.split(":");
             System.out.println("rcvd " + player + "  " + buf);
+            if(temp[0].equals("13")){
+                temp[0] = "0";
+            }
             
             for(int j = 0; j<13; j++){
                 if((hand[player].cards[j]!=null) && (hand[player].cards[j].value == Integer.parseInt(temp[0]))&& (hand[player].cards[j].suit == Integer.parseInt(temp[1]))){
