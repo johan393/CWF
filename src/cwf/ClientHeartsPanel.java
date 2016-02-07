@@ -111,7 +111,9 @@ public class ClientHeartsPanel extends GamePanel {
                 out.println(ca[0].value +":"+ ca[0].suit);//sends the three cards
                 out.println(ca[1].value +":"+ ca[1].suit);
                 out.println(ca[2].value +":"+ ca[2].suit);
+                hand[0].revalidate();
                 passphase = false;
+                ((JButton)e.getSource()).setEnabled(false);
                 synchronized(lock){
                     System.out.println(" block   ");
                     try{
@@ -129,6 +131,14 @@ public class ClientHeartsPanel extends GamePanel {
                 }
             passphase = true;
             center.remove(passbutton);
+            synchronized(lock){
+                    try{
+                        lock.notify();
+                    }
+                    catch(Exception ex){
+                        System.out.println("could not notify passing ok wait");
+                    }
+                }
             }             
         }
     });
@@ -261,6 +271,17 @@ public class ClientHeartsPanel extends GamePanel {
        }
        
        hand[0].addCards(received);
+       
+       passbutton.setText("OK");
+       passbutton.setEnabled(true);
+       synchronized(lock){//wait for player to select the cards to pass
+            try{
+            lock.wait();
+            }
+            catch(Exception e){
+                System.out.println("error waiting for passbutton");
+            }
+        }
     }
     public void setCardListeners(){
        ActionListener ex = new ActionListener() {

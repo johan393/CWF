@@ -75,6 +75,7 @@ public class HostHeartsPanel extends GamePanel {
     Socket[] cli;
     PrintWriter[] outs;
     BufferedReader[] ins;
+    JLabel namepanels[];
     
     
     public HostHeartsPanel(int people, Dimension d, String name, Socket[] cli) { // this is the host panel
@@ -100,7 +101,7 @@ public class HostHeartsPanel extends GamePanel {
             System.out.println("could not create connections ");
         }
         lock = new Object();
-        
+        namepanels();
         this.d = d;
         roundcount = 0;
         setLayout(new java.awt.BorderLayout());
@@ -251,7 +252,7 @@ public class HostHeartsPanel extends GamePanel {
                 System.out.println("error waiting for passbutton");
             }
         }
-        
+        hand[0].revalidate();
         for(int i = 1; i<people; i++){//everybody except the player
            passcards[i]=getPassCards(i);
         }
@@ -749,27 +750,24 @@ public void displayScores(){
             System.out.println("hand" + player);
         }
         }
-        catch(IOException e){
+        catch(Exception e){
             System.out.println("could not read in a passed card");
             e.printStackTrace();
-        }
-        catch(NullPointerException g){
-            System.out.println(player);
-            try{
-            buf = ins[player-1].readLine();
-            System.out.println(buf);
-            buf = ins[player-1].readLine();
-            System.out.println(buf);
-            }
-            catch(Exception e){}
-            
-            g.printStackTrace();
         }
         return p;
         }
     
     public JPanel getScoreList(){
         return ScoreList;
+    }
+    public void namepanels(){
+        namepanels = new JLabel[people];
+        for(int i = 0; i<people; i++){
+            namepanels[i] = new JLabel(players[i]);
+        }
+        if(people==4){
+            ///////////////////////////add code to add name descriptors
+        }
     }
 }
 
