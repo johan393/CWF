@@ -148,7 +148,7 @@ public class HostHeartsPanel extends GamePanel {
                 System.out.println(hand[0].getSelectedCount());
             if(hand[0].getSelectedCount()==3){
                 passcards[0]=hand[0].getSelectedCards(true);//puts the 3 cards in the passcards thing, removes from hand
-                
+                passbutton.setEnabled(false);
                 synchronized(lock){
                     System.out.println(" block   ");
                     try{
@@ -252,6 +252,7 @@ public class HostHeartsPanel extends GamePanel {
                 System.out.println("error waiting for passbutton");
             }
         }
+        
         hand[0].revalidate();
         for(int i = 1; i<people; i++){//everybody except the player
            passcards[i]=getPassCards(i);
@@ -259,7 +260,7 @@ public class HostHeartsPanel extends GamePanel {
         /*System.out.println(passcards[2][0].value +":"+passcards[2][0].suit);
                 System.out.println(passcards[2][1].value +":"+passcards[2][1].suit);
                 System.out.println(passcards[2][2].value +":"+passcards[2][2].suit);*/
-        
+        passbutton.setEnabled(true);
         passphase = false;
         passcards[0][0].deselect();
         passcards[0][1].deselect();
