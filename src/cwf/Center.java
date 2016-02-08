@@ -49,10 +49,10 @@ public class Center extends javax.swing.JPanel{
     public Timer t;//animator timer
     public String[] names;
     JLabel[] namepanels;
-
+    int playerpos;
 
     
-    public Center(int people, Dimension d, String[] names) {
+    public Center(int people, Dimension d, String[] names, int playerpos) {
         super();
         initComponents();
         this.people=people;
@@ -62,6 +62,7 @@ public class Center extends javax.swing.JPanel{
         this.setVisible(true);
         t= new Timer();
         this.names = names;
+        this.playerpos = playerpos;
     }
     public void playCard(Card card,int position){
         task = new JTimer(this, people);
@@ -150,26 +151,27 @@ public class Center extends javax.swing.JPanel{
         color = null;
         }
         namepanels = new JLabel[people];
-        for(int i = 0; i<people; i++){
-            namepanels[i] = new JLabel(names[i]);
-            namepanels[i].setForeground(color);
-        }
+
         if(people == 4){
+            for(int i = 0; i<people; i++){
+            namepanels[(i+(4-playerpos))%4] = new JLabel(names[i]);
+            namepanels[(i+(4-playerpos))%4].setForeground(color);
+            }
             namepanels[0].setBounds(JTimer.iposx[0]-480, JTimer.iposy[0]+80, 180, 50);
             namepanels[0].setFont(new Font("Times New Roman", 0 , 24));
-            namepanels[1].setBounds(JTimer.iposx[1], JTimer.iposy[1]-235, 180, 30);
+            namepanels[1].setBounds(JTimer.iposx[1], JTimer.iposy[1]-245, 180, 50);
             namepanels[1].setFont(new Font("Times New Roman", 0 , 24));
             width = metrics.stringWidth(names[2]);//d
             if(width>180){
                 width = 180;
             }
-            namepanels[2].setBounds(JTimer.iposx[2]+320-width, JTimer.iposy[2]+5, 180, 18);
+            namepanels[2].setBounds(JTimer.iposx[2]+320-width, JTimer.iposy[2]-10, 180, 50);
             namepanels[2].setFont(new Font("Times New Roman", 0 , 24));
             width = metrics.stringWidth(names[3]);
             if(width>180){
                 width = 180;
             }
-            namepanels[3].setBounds(JTimer.iposx[3]+ 75-width, JTimer.iposy[3]+295, 180, 40);
+            namepanels[3].setBounds(JTimer.iposx[3]+ 75-width, JTimer.iposy[3]+290, 180, 50);
             namepanels[3].setFont(new Font("Times New Roman", 0 , 24));
             this.add(namepanels[0]);
             this.add(namepanels[1]);

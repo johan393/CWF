@@ -73,7 +73,7 @@ public class HeartsPanel extends GamePanel {
         setLayout(new java.awt.BorderLayout());
         this.people=people;
         hand = new Hand[people]; 
-        center = new Center(people, d, players);
+        center = new Center(people, d, players,0);
         bg=new ImageIcon("themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
         this.setDoubleBuffered(true);
         piles=new ArrayList[people];

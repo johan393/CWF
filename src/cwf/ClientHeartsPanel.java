@@ -44,6 +44,7 @@ public class ClientHeartsPanel extends GamePanel {
     GridBagConstraints c;
     Card playercard;
     final Object lock;
+    int playerpos;
     
     JButton passbutton;
     String passDirection;
@@ -65,6 +66,9 @@ public class ClientHeartsPanel extends GamePanel {
             System.out.println("sent name" + name);
             for(int i = 0; i<people; i++){
                 players[i] = in.readLine();//get the names of everybody
+                if(players[i].equals(name)){
+                    playerpos=i;
+                }
             }
         }
         catch(Exception e){
@@ -75,7 +79,7 @@ public class ClientHeartsPanel extends GamePanel {
         setLayout(new java.awt.BorderLayout());
         this.people=people;
         hand = new Hand[people]; 
-        center = new Center(people, d,players);
+        center = new Center(people, d,players, playerpos);
         bg=new ImageIcon("themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
         this.setDoubleBuffered(true);
         pts=new int[people];
