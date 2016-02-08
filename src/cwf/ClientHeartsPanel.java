@@ -75,7 +75,7 @@ public class ClientHeartsPanel extends GamePanel {
         setLayout(new java.awt.BorderLayout());
         this.people=people;
         hand = new Hand[people]; 
-        center = new Center(people, d);
+        center = new Center(people, d,players);
         bg=new ImageIcon("themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
         this.setDoubleBuffered(true);
         pts=new int[people];

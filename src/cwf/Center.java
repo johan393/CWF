@@ -9,6 +9,7 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -20,12 +21,15 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
+import java.lang.reflect.Field;
 import java.util.concurrent.Semaphore;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.util.Timer;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -42,10 +46,12 @@ public class Center extends javax.swing.JPanel{
     
     public JTimer task;//contains the code to be executed by timer
     public Timer t;//animator timer
+    public String[] names;
+    JLabel[] namepanels;
 
 
     
-    public Center(int people, Dimension d) {
+    public Center(int people, Dimension d, String[] names) {
         super();
         initComponents();
         this.people=people;
@@ -54,6 +60,7 @@ public class Center extends javax.swing.JPanel{
         
         this.setVisible(true);
         t= new Timer();
+        this.names = names;
     }
     public void playCard(Card card,int position){
         task = new JTimer(this, people);
@@ -129,6 +136,38 @@ public class Center extends javax.swing.JPanel{
             
         }
         JTimer.setpos(posx, iposx, posy, iposy);
+        
+        if(namepanels==null){//effectively makes this call a one time thing per game
+        Color color;
+        try{
+        Field field = Class.forName("java.awt.Color").getField(MainFrame.buttonColor);
+        color = (Color)field.get(null);
+        }
+        catch(Exception e){
+        color = null;
+        }
+        namepanels = new JLabel[people];
+        for(int i = 0; i<people; i++){
+            namepanels[i] = new JLabel(names[i]);
+            namepanels[i].setForeground(color);
+        }
+        if(people == 4){
+            namepanels[0].setBounds(JTimer.iposx[0]-480, JTimer.iposy[0]+80, 180, 50);
+            namepanels[0].setFont(new Font("Times New Roman", 0 , 24));
+            namepanels[1].setBounds(JTimer.iposx[1], JTimer.iposy[1]-235, 180, 30);
+            namepanels[1].setFont(new Font("Times New Roman", 0 , 24));
+            namepanels[2].setBounds(JTimer.iposx[2]+145, JTimer.iposy[2]+5, 180, 18);
+            namepanels[2].setFont(new Font("Times New Roman", 0 , 24));
+            namepanels[3].setHorizontalAlignment(SwingConstants.RIGHT);
+            namepanels[3].setBounds(JTimer.iposx[3]-100, JTimer.iposy[3]+295, 180, 40);
+            namepanels[3].setFont(new Font("Times New Roman", 0 , 24));
+            namepanels[3].setHorizontalAlignment(SwingConstants.RIGHT);
+            this.add(namepanels[0]);
+            this.add(namepanels[1]);
+            this.add(namepanels[2]);
+            this.add(namepanels[3]);
+        }
+        }
     }
     public void takeTrick(int position){
         task = new JTimer(this, people);

@@ -8,25 +8,20 @@ package cwf;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import static java.lang.Thread.currentThread;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import java.util.Timer;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -58,7 +53,6 @@ public class HeartsPanel extends GamePanel {
     GridBagConstraints c;
     final Object lock;
     Card playercard;
-    
     Card[][] passcards;
     JButton passbutton;
     String passDirection;
@@ -79,18 +73,19 @@ public class HeartsPanel extends GamePanel {
         setLayout(new java.awt.BorderLayout());
         this.people=people;
         hand = new Hand[people]; 
-        center = new Center(people, d);
+        center = new Center(people, d, players);
         bg=new ImageIcon("themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
         this.setDoubleBuffered(true);
         piles=new ArrayList[people];
         pts=new int[people];
+        
         for(int i=0;i<people;i++){
             piles[i]=new ArrayList<>();
         }
         this.add(center);
         this.setVisible(true);
         
-     
+       
 
         this.players = players;
         
@@ -668,6 +663,7 @@ public void displayScores(){
     public JPanel getScoreList(){
         return ScoreList;
     }
+    
 }
 
 
