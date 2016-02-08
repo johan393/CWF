@@ -50,6 +50,7 @@ public class Center extends javax.swing.JPanel{
     public String[] names;
     JLabel[] namepanels;
     int playerpos;
+    Card[] current;
 
     
     public Center(int people, Dimension d, String[] names, int playerpos) {
@@ -63,8 +64,10 @@ public class Center extends javax.swing.JPanel{
         t= new Timer();
         this.names = names;
         this.playerpos = playerpos;
+        current = new Card[people];
     }
     public void playCard(Card card,int position){
+        current[position] = card;
         task = new JTimer(this, people);
         JTimer.x=JTimer.iposx[position];
         JTimer.y=JTimer.iposy[position];
@@ -194,8 +197,10 @@ public class Center extends javax.swing.JPanel{
             JTimer.dx=(JTimer.iposx[position]-JTimer.x)/160;
             JTimer.dy=(JTimer.iposy[position]-JTimer.y)/160;
         }
-        this.removeAll();
-        
+        //this.removeAll();
+        for(int i = 0; i<current.length; i++){
+            this.remove(current[i]);
+        }
         JTimer.direction= 0;
         JTimer.player = position;
         t.scheduleAtFixedRate(task, 0, 8);

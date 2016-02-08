@@ -133,7 +133,7 @@ public class ClientHeartsPanel extends GamePanel {
                 for(int i = 0; i<hand[0].cards.length; i++){
                     hand[0].cards[i].deselect();
                 }
-            passphase = true;
+            
             center.remove(passbutton);
             synchronized(lock){
                     try{
