@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -138,6 +139,8 @@ public class Center extends javax.swing.JPanel{
         JTimer.setpos(posx, iposx, posy, iposy);
         
         if(namepanels==null){//effectively makes this call a one time thing per game
+        FontMetrics metrics = getFontMetrics(new Font("Times New Roman", 0, 24));
+        int width;
         Color color;
         try{
         Field field = Class.forName("java.awt.Color").getField(MainFrame.buttonColor);
@@ -156,12 +159,18 @@ public class Center extends javax.swing.JPanel{
             namepanels[0].setFont(new Font("Times New Roman", 0 , 24));
             namepanels[1].setBounds(JTimer.iposx[1], JTimer.iposy[1]-235, 180, 30);
             namepanels[1].setFont(new Font("Times New Roman", 0 , 24));
-            namepanels[2].setBounds(JTimer.iposx[2]+145, JTimer.iposy[2]+5, 180, 18);
+            width = metrics.stringWidth(names[2]);//d
+            if(width>180){
+                width = 180;
+            }
+            namepanels[2].setBounds(JTimer.iposx[2]+320-width, JTimer.iposy[2]+5, 180, 18);
             namepanels[2].setFont(new Font("Times New Roman", 0 , 24));
-            namepanels[3].setHorizontalAlignment(SwingConstants.RIGHT);
-            namepanels[3].setBounds(JTimer.iposx[3]-100, JTimer.iposy[3]+295, 180, 40);
+            width = metrics.stringWidth(names[3]);
+            if(width>180){
+                width = 180;
+            }
+            namepanels[3].setBounds(JTimer.iposx[3]+ 75-width, JTimer.iposy[3]+295, 180, 40);
             namepanels[3].setFont(new Font("Times New Roman", 0 , 24));
-            namepanels[3].setHorizontalAlignment(SwingConstants.RIGHT);
             this.add(namepanels[0]);
             this.add(namepanels[1]);
             this.add(namepanels[2]);
