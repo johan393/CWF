@@ -164,7 +164,7 @@ public class Center extends javax.swing.JPanel{
             namepanels[0].setFont(new Font("Times New Roman", 0 , 24));
             namepanels[1].setBounds(JTimer.iposx[1], JTimer.iposy[1]-245, 180, 50);
             namepanels[1].setFont(new Font("Times New Roman", 0 , 24));
-            if(playerpos == 1){
+            if(playerpos == 2){
             width = metrics.stringWidth(names[0]);
             }
             else{
