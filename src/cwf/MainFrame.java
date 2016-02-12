@@ -7,11 +7,14 @@ package cwf;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -21,6 +24,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.net.Socket;
+import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -61,6 +65,7 @@ public class MainFrame extends javax.swing.JFrame {
     GamePanel panel;
     JMenuBar menuBar;
     String[] players;
+    Image bg;
     
 
     int people;
@@ -70,7 +75,9 @@ public class MainFrame extends javax.swing.JFrame {
         super();
         
         loadsettings();
+        bg = (new ImageIcon(bgtheme)).getImage();
         initComponents();
+        
 
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
@@ -79,19 +86,7 @@ public class MainFrame extends javax.swing.JFrame {
         this.setLayout(new BorderLayout());
 
         System.out.println(players);
-        if(platform==0){
-            panel = new HeartsPanel(people,screenSize, players);
-        }
-        else{
-            Socket[] cli = Client.connect();
-            if(Client.host){
-                panel = new HostHeartsPanel(people,screenSize, players[0], cli);
-            }
-            else{
-                panel = new ClientHeartsPanel(people,screenSize, players[0], cli);
-            }
-        }
-        panel.setPreferredSize(screenSize);
+        
         menuBar = new JMenuBar();
 
         JMenu game = new JMenu("Game");
@@ -275,29 +270,55 @@ public class MainFrame extends javax.swing.JFrame {
         options.add(names);
         options.add(themes);
 
-
-        JMenuItem exit = new JMenuItem("Exit");
+        JMenuItem leavelobby = new JMenuItem("Leave Game");
+        JMenuItem exit = new JMenuItem("Exit App");
+        JMenu exitmenu = new JMenu("Exit");
+        
         exit.addActionListener(
 
         new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         System.exit(0);
         }});
+        
+        
 
+        exitmenu.add(leavelobby);
+        exitmenu.add(exit);
         menuBar.add(game);
         menuBar.add(options);
-        menuBar.add(exit);
+        menuBar.add(Box.createHorizontalGlue());
+        menuBar.add(exitmenu);
 
         this.setJMenuBar(menuBar);
         
-        this.add(panel);
-
         this.setResizable(false);
         //this.pack();
 
         this.toFront();
         requestFocus();
         this.setVisible(true);
+        if(platform==0){
+            panel = new HeartsPanel(people,screenSize, players);
+        }
+        else{
+            Client client = new Client();
+            client.setPreferredSize(screenSize);
+            this.add(client);
+            Socket[] cli = client.connect();
+            if(Client.host){
+                panel = new HostHeartsPanel(people,screenSize, players[0], cli);
+            }
+            else{
+                panel = new ClientHeartsPanel(people,screenSize, players[0], cli);
+            }
+            this.remove(client);
+        }
+        panel.setPreferredSize(screenSize);
+        
+        this.add(panel);
+
+        
 
     }
 
@@ -396,7 +417,6 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

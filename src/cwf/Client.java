@@ -5,14 +5,24 @@
  */
 package cwf;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import org.fourthline.cling.UpnpServiceImpl;
 import org.fourthline.cling.support.igd.PortMappingListener;
 import org.fourthline.cling.support.model.PortMapping;
@@ -22,7 +32,7 @@ import org.fourthline.cling.support.model.PortMapping;
  *
  * @author Michael
  */
-public class Client {
+public class Client extends JPanel{
 
     /**
      * @param args the command line arguments
@@ -32,8 +42,30 @@ public class Client {
     public static int play;
     static public String[] ips;
     static boolean host = false;
+    Image bg;
     
-    public static Socket[] connect() {
+    JLabel status;
+    
+    public Client(){;
+        status = new JLabel("Connecting to Server...");
+        bg = new ImageIcon("themes\\" + MainFrame.bgtheme + "\\bg.png").getImage();
+        
+        Color color;
+        try{
+        Field field = Class.forName("java.awt.Color").getField(MainFrame.buttonColor);
+        color = (Color)field.get(null);
+        }
+        catch(Exception e){
+        color = null;
+        }
+        status.setForeground(color);
+        status.setPreferredSize(new Dimension(400,100));
+        status.setFont(new Font("Times New Roman", 0 , 28));
+        this.add(status, BorderLayout.NORTH);
+        this.setVisible(true);
+    }
+    
+    public Socket[] connect() {
         Socket[] rsock = new Socket[1];
         
         try{
@@ -54,6 +86,9 @@ public class Client {
             
             buffer = in.readLine();//conneted print
             System.out.println(buffer);//should print "connected"
+            status.setText("Searching for other players...");
+            this.revalidate();
+
             
             buffer = in.readLine();
             if(buffer.equals("H")){
@@ -64,6 +99,9 @@ public class Client {
                     temp = buffer.split(":");
                     ips[i] = temp[0].substring(1);
                     System.out.println(ips[i]);
+                    status.setText("Found game, awaiting clients...");
+                    this.revalidate();
+
                 }
                 
                 in.close();
@@ -99,6 +137,8 @@ public class Client {
                     temp = buffer.split(":");
                     ips[i] = temp[0].substring(1);
                     System.out.println(ips[i]);
+                    status.setText("Found game, awaiting host...");
+                    this.revalidate();
                 }
 
                 //close connection to site, try to connect to host
@@ -128,5 +168,10 @@ public class Client {
         return rsock;
         
     }
+   public void paintComponent(Graphics g){
+     super.paintComponent(g);
+     g.drawImage(bg,0,0,null);
+
+   }
     
 }
