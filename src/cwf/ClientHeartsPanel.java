@@ -163,21 +163,18 @@ public class ClientHeartsPanel extends GamePanel {
         
         if(people==4){
             Card[][] hands = new Card[4][13];
-            for(int j =1; j<people; j++){ //j starts at 1 so that cards[0] will be this player's hand
-            for(int i =0; i<13; i++){
-                hands[j][i] = new Card();//sets the cards up in the other hands to be dummy cards
-            }
-            }
             try{
+            for(int j = 0; j<people; j++){
             for(int i = 0; i<13; i++){
                 buf = in.readLine();
                 temp = buf.split(":");
                 if(temp[0].equals("13")){
-                    hands[0][i] = new Card(0, Integer.parseInt(temp[1]));
+                    hands[(j+(4-playerpos))%4][i] = new Card(0, Integer.parseInt(temp[1]));
                 }
                 else{
-                    hands[0][i] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+                    hands[(j+(4-playerpos))%4][i] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
                 }
+            }
             }
             }
             catch(Exception e){

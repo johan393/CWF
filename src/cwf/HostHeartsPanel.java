@@ -187,10 +187,11 @@ public class HostHeartsPanel extends GamePanel {
         if(people==4){
             Card[][] hands = deck.stddeal(4);
             for(int i = 1; i<people;i++){
+              for(int k = 0; k<people;k++){
                 for(int j = 0; j<13; j++){
-                    outs[i-1].println(hands[i][j].value + ":" + hands[i][j].suit);
-                    
+                    outs[i-1].println(hands[k][j].value + ":" + hands[k][j].suit);
                 }
+              }
             }
             
             hand[0]=new Hand(hands[0], 'p');
@@ -726,7 +727,11 @@ public void displayScores(){
             trick.playCard(c, person);
             hand[person].playCard(legalMoves.get(p));
             center.playCard(c, person);
-            outs[person-1].println("r");//tells client card was valid
+            outs[person-1].println("r");//tells client card was valid: "received"
+            for(int j=0;j<outs.length;j++){
+                        outs[j].println(0);
+                        outs[j].println(playercard.value + ":" + playercard.suit);
+            }
             
         }
         catch(Exception e){
