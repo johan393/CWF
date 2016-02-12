@@ -602,7 +602,10 @@ public void proceed(){
                     trick.playCard(playercard, 0);
                     hand[0].playCard(playercard);
                     center.playCard(playercard,0);
-
+                    for(int j=0;j<outs.length;j++){
+                        outs[j].println(0);
+                        outs[j].println(playercard.value + ":" + playercard.suit);
+                    }
                     person=(person+1)%people;
                     
                 }
@@ -695,34 +698,42 @@ public void displayScores(){
     }
     
     public int playCard(){
-     
-        //this block checks various conditions...
-        if(!start){
-            for(int i =0;i<hand[person].cards.length;i++){
-                if(hand[person].cards[i].suit==1 && hand[person].cards[i].value==1){
-                    start = true;
-                    Card c = hand[person].cards[i];
-                    trick.playCard(c, person);
-                    hand[person].playCard(i);
-                    center.playCard(c, person);
-                    return i;
+        boolean play = false;
+        int p=0;
+        String buf;
+        Card c = new Card();
+        String[] temp = new String[2];
+        ArrayList<Integer> legalMoves = legalMoves();
+        try{
+            while(!play){
+                
+            outs[person-1].println("g");//tells client to "go"
+            buf = ins[person-1].readLine();//this will be the play
+            temp = buf.split(":");
+            
+            for(int i = 0; i<legalMoves.size(); i++){
+                if(hand[person].cards[legalMoves.get(i)].value==Integer.parseInt(temp[0]) && hand[person].cards[legalMoves.get(i)].suit == Integer.parseInt(temp[1])){
+                    c = hand[person].cards[legalMoves.get(i)];
+                    p=i;
+                    play = true;
                 }
             }
+            }
+            start = true;
+            if(c.suit == 3){
+                heartsbroken=true;
+            }
+            trick.playCard(c, person);
+            hand[person].playCard(legalMoves.get(p));
+            center.playCard(c, person);
+            outs[person-1].println("r");//tells client card was valid
+            
         }
-        
-        //Easy AI
-        ArrayList<Integer> legalMoves = legalMoves();
-        Random x = new Random();
-        
-        int p = legalMoves.get(x.nextInt(legalMoves.size()));//returns a random, but legal, play
-        
-        Card c = hand[person].cards[p];
-        if(c.suit == 3){
-            heartsbroken=true;
+        catch(Exception e){
+            System.out.print("error in proceeding");
+            e.printStackTrace();
         }
-        trick.playCard(c, person);
-        hand[person].playCard(p);
-        center.playCard(c, person);
+
         return p;
     }
     
