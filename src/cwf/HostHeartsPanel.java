@@ -101,7 +101,6 @@ public class HostHeartsPanel extends GamePanel {
             System.out.println("could not create connections ");
         }
         lock = new Object();
-        namepanels();
         this.d = d;
         roundcount = 0;
         setLayout(new java.awt.BorderLayout());
@@ -604,6 +603,7 @@ public void proceed(){
                     hand[0].playCard(playercard);
                     center.playCard(playercard,0);
                     for(int j=0;j<outs.length;j++){
+                        outs[j].println("p");
                         outs[j].println(0);
                         outs[j].println(playercard.value + ":" + playercard.suit);
                     }
@@ -729,7 +729,8 @@ public void displayScores(){
             center.playCard(c, person);
             outs[person-1].println("r");//tells client card was valid: "received"
             for(int j=0;j<outs.length;j++){
-                        outs[j].println(0);
+                        outs[j].println("p");
+                        outs[j].println(person);
                         outs[j].println(playercard.value + ":" + playercard.suit);
             }
             
@@ -777,15 +778,7 @@ public void displayScores(){
     public JPanel getScoreList(){
         return ScoreList;
     }
-    public void namepanels(){
-        namepanels = new JLabel[people];
-        for(int i = 0; i<people; i++){
-            namepanels[i] = new JLabel(players[i]);
-        }
-        if(people==4){
-            ///////////////////////////add code to add name descriptors
-        }
-    }
+
 }
 
 

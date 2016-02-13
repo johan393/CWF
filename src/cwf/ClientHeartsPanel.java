@@ -52,6 +52,7 @@ public class ClientHeartsPanel extends GamePanel {
     
     PrintWriter out;
     BufferedReader in;
+    char tristate;
     
     public ClientHeartsPanel(int people, Dimension d, String name, Socket[] host) {
        // super();
@@ -253,6 +254,7 @@ public class ClientHeartsPanel extends GamePanel {
        }
        received[1].select();
        
+       
        buf = in.readLine();
        temp = buf.split(":");
        if(temp[0].equals("13")){
@@ -297,6 +299,7 @@ public class ClientHeartsPanel extends GamePanel {
             }
             else{
                 //TODO TO HANDLE REGULAR PLAY
+                playercard = (Card)e.getSource();
             }
         };
        };
@@ -308,4 +311,30 @@ public class ClientHeartsPanel extends GamePanel {
      super.paintComponent(g);
      g.drawImage(bg,0,0,null);
    }
+    
+    public void proceed(){
+        boolean done = false;
+        String buf;
+        while(!done){
+            try{
+                buf = in.readLine();
+                if(buf.equals("g")){//it is the player's turn
+                    
+                }
+                else if(buf.equals("r")){//player card accepted
+                    
+                }
+                else if(buf.equals("p")){//card played, time to show the user
+                    
+                }
+                else if(buf.equals("d")){//end of round
+                    
+                }
+            }
+            catch(Exception e){
+                System.out.println("error in proceeding client");
+                e.printStackTrace();
+            }
+        }
+    }
 }
