@@ -330,8 +330,8 @@ public class HeartsPanel extends GamePanel {
                     synchronized(lock){
                         playercard = (Card) e.getSource();
                         lock.notify();
-                }
                     }
+                }
                 catch(Exception E){
                       System.out.println("Button failed to notify main thread");  
                 }

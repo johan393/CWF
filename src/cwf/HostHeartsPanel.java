@@ -47,7 +47,7 @@ public class HostHeartsPanel extends GamePanel {
     //these variables are part of game setup
     Deck deck;
     int people;
-    Center center;
+    Trick trick;
     
     //these variables keep track of gameplay
     ArrayList<Card>[] piles;
@@ -186,12 +186,11 @@ public class HostHeartsPanel extends GamePanel {
         if(people==4){
             Card[][] hands = deck.stddeal(4);
             for(int i = 1; i<people;i++){
-              for(int k = 0; k<people;k++){
                 for(int j = 0; j<13; j++){
-                    outs[i-1].println(hands[k][j].value + ":" + hands[k][j].suit);
+                    outs[i-1].println(hands[i][j].value + ":" + hands[i][j].suit);
                 }
               }
-            }
+            
             
             hand[0]=new Hand(hands[0], 'p');
             hand[1]=new Hand(hands[1], 'l');
@@ -389,6 +388,16 @@ public class HostHeartsPanel extends GamePanel {
             }
         
             center.remove(passbutton);
+            
+        for(int k = 0; k<outs.length; k++){
+            for(int i = 0; i<people; i++){
+                for(int j = 0; j<13; j++){
+                    if(!(k == i-1)){
+                    outs[k].println(hand[i].cards[j].value + ":" + hand[i].cards[j].suit);
+                    }
+                }
+            }
+       }
    }
    }
    public void paintComponent(Graphics g){
@@ -470,6 +479,9 @@ public class HostHeartsPanel extends GamePanel {
      for(int i=0;i<people;i++){
          c.gridx=i;
          ScoreList.add(new JLabel(Integer.toString(pts[i])), c);
+         for(int j = 0; j<outs.length; j++){
+             outs[j].println(pts[i]);
+         }
      }
      boolean end = false;
      for(int i=0;i<people;i++){
@@ -488,7 +500,9 @@ public class HostHeartsPanel extends GamePanel {
                  lowscore = pts[i];
              }
          }
-         
+         for(int j = 0; j<outs.length; j++){
+             outs[j].println("m");
+         }
          for(int i = 0; i<people; i++){
              if(pts[i] == lowscore){
                  c.gridy = roundcount+1;
@@ -496,6 +510,11 @@ public class HostHeartsPanel extends GamePanel {
                  ScoreList.add(new JLabel("WINNER"),c);
              }
          }
+     }
+     else{
+        for(int j = 0; j<outs.length; j++){
+             outs[j].println("n");
+         } 
      }
     
      JOptionPane.showMessageDialog(this,ScoreList,"Scores",JOptionPane.PLAIN_MESSAGE);
@@ -568,11 +587,18 @@ public void proceed(){
                 System.out.println("insomnia");
             }
             center.takeTrick(person);
+            for(int j=0;j<outs.length;j++){
+                        outs[j].println("t");
+                        outs[j].println(person);
+            }
             
             if(!hand[1].empty){ // if there are sstill more tricks to be played after this one
                 trick=new Trick(people);
             } else {
                 done = true;
+                for(int j=0;j<outs.length;j++){
+                        outs[j].println("d");
+                }
                 doRoundEnd();
             }
         }
@@ -727,7 +753,6 @@ public void displayScores(){
             trick.playCard(c, person);
             hand[person].playCard(legalMoves.get(p));
             center.playCard(c, person);
-            outs[person-1].println("r");//tells client card was valid: "received"
             for(int j=0;j<outs.length;j++){
                         outs[j].println("p");
                         outs[j].println(person);
@@ -736,7 +761,7 @@ public void displayScores(){
             
         }
         catch(Exception e){
-            System.out.print("error in proceeding");
+            System.out.print("error in PLAYCARD");
             e.printStackTrace();
         }
 

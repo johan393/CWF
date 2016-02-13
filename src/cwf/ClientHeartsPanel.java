@@ -52,7 +52,7 @@ public class ClientHeartsPanel extends GamePanel {
     
     PrintWriter out;
     BufferedReader in;
-    char tristate;
+    String tristate;
     
     public ClientHeartsPanel(int people, Dimension d, String name, Socket[] host) {
        // super();
@@ -165,17 +165,21 @@ public class ClientHeartsPanel extends GamePanel {
         if(people==4){
             Card[][] hands = new Card[4][13];
             try{
-            for(int j = 0; j<people; j++){
+            for(int i = 1;i<people;i++){
+                for(int j = 0;j<13;j++){
+                   hands[i][j] = new Card(); 
+                }
+                
+            }
             for(int i = 0; i<13; i++){
                 buf = in.readLine();
                 temp = buf.split(":");
                 if(temp[0].equals("13")){
-                    hands[(j+(4-playerpos))%4][i] = new Card(0, Integer.parseInt(temp[1]));
+                    hands[0][i] = new Card(0, Integer.parseInt(temp[1]));
                 }
                 else{
-                    hands[(j+(4-playerpos))%4][i] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+                    hands[0][i] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
                 }
-            }
             }
             }
             catch(Exception e){
@@ -194,7 +198,6 @@ public class ClientHeartsPanel extends GamePanel {
             
         }
         setCardListeners();//this method will need to exist for both client and host, but will add wildly different behavior to the buttons
-        trick=new Trick(people);
         
         
         revalidate();
@@ -273,6 +276,15 @@ public class ClientHeartsPanel extends GamePanel {
            e.printStackTrace();
        }
        
+       for(int i = 0; i<3; i++){
+                    received[i].select();
+                    received[i].addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            //TODO ADD ACTION LISTENER TO PASSED CARDS
+                        }});
+                }
+       
+       
        hand[0].addCards(received);
        
        passbutton.setText("OK");
@@ -285,6 +297,29 @@ public class ClientHeartsPanel extends GamePanel {
                 System.out.println("error waiting for passbutton");
             }
         }
+       Card[][] hands = new Card[4][13];
+       try{
+       for(int i = 0; i<people; i++){
+           for(int j = 0; j<13; j++){
+               buf = in.readLine();
+               temp = buf.split(":");
+               hands[i][j] = new Card(Integer.parseInt(temp[1]),Integer.parseInt(temp[0]) );
+           }
+       }
+       this.remove(hand[1]);
+       this.remove(hand[2]);
+       this.remove(hand[3]);
+       hand[1]=new Hand(hands[1+(4-playerpos)%4], 'l');
+       hand[2]=new Hand(hands[2+(4-playerpos)%4], 'a');
+       hand[3]=new Hand(hands[3+(4-playerpos)%4], 'r');
+       this.add(hand[1], BorderLayout.WEST);
+       this.add(hand[2], BorderLayout.NORTH);
+       this.add(hand[3], BorderLayout.EAST);
+       }
+       catch(Exception e){
+           System.out.println("cant read in deal after pass");
+       }
+
     }
     public void setCardListeners(){
        ActionListener ex = new ActionListener() {
@@ -298,8 +333,15 @@ public class ClientHeartsPanel extends GamePanel {
                 }
             }
             else{
-                //TODO TO HANDLE REGULAR PLAY
-                playercard = (Card)e.getSource();
+                try{
+                    synchronized(lock){
+                        playercard = (Card) e.getSource();
+                        lock.notify();
+                    }
+                }
+                catch(Exception E){
+                      System.out.println("Button failed to notify main thread");  
+                }
             }
         };
        };
@@ -315,20 +357,38 @@ public class ClientHeartsPanel extends GamePanel {
     public void proceed(){
         boolean done = false;
         String buf;
+        int player;
+        String[] temp = new String[2];
         while(!done){
             try{
                 buf = in.readLine();
                 if(buf.equals("g")){//it is the player's turn
-                    
-                }
-                else if(buf.equals("r")){//player card accepted
-                    
+                    try{
+                        synchronized(lock){
+                            lock.wait();
+                        }
+                    }
+                    catch(Exception ex){
+                        System.out.println("Error in proceed synchronization awaiting client response");
+                        ex.printStackTrace();
+                    }
+                    out.println(playercard.value + ":" + playercard.suit);
                 }
                 else if(buf.equals("p")){//card played, time to show the user
-                    
+                    buf = in.readLine();
+                    player = Integer.parseInt(buf);
+                    buf = in.readLine();
+                    temp = buf.split(":");
+                    hand[player].playCard(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+                    center.playCard(new Card(Integer.parseInt(temp[1]),Integer.parseInt(temp[0])),player);
+                }
+                else if(buf.equals("t")){//trick was taken
+                    buf = in.readLine();
+                    player = Integer.parseInt(buf);
+                    center.takeTrick(player);
                 }
                 else if(buf.equals("d")){//end of round
-                    
+                    doRoundEnd();
                 }
             }
             catch(Exception e){
@@ -336,5 +396,34 @@ public class ClientHeartsPanel extends GamePanel {
                 e.printStackTrace();
             }
         }
+    }
+    
+    public void doRoundEnd(){
+        roundcount++;
+        c.gridy=roundcount;
+        String buf;
+        try{
+        for(int i=0;i<people;i++){
+         c.gridx=i;
+         buf = in.readLine();
+         ScoreList.add(new JLabel(buf), c);
+        }
+        buf = in.readLine();
+        if(buf.equals("m")){
+            System.out.println("game is over");
+            JOptionPane.showMessageDialog(this,ScoreList,"Scores",JOptionPane.PLAIN_MESSAGE);
+        }
+        else{
+            System.out.println("game continues");
+            JOptionPane.showMessageDialog(this,ScoreList,"Scores",JOptionPane.PLAIN_MESSAGE);
+            newRound();
+        }
+        }
+        catch(Exception e){
+            System.out.println("error receiving scores");
+            e.printStackTrace();
+        }
+        
+        
     }
 }

@@ -229,8 +229,8 @@ public class MainFrame extends javax.swing.JFrame {
                         }
                         
                         for(int i = 0; i<people; i++){
-                            if(panel.trick.cards[i]!=null){
-                                panel.trick.cards[i].setCard('p');
+                            if(panel.center.current[i]!=null){
+                                panel.center.current[i].setCard('p');
                             }
                         }
                         panel.repaint();
@@ -305,6 +305,8 @@ public class MainFrame extends javax.swing.JFrame {
             Client client = new Client();
             client.setPreferredSize(screenSize);
             this.add(client);
+            client.validate();
+            client.repaint();
             Socket[] cli = client.connect();
             if(Client.host){
                 panel = new HostHeartsPanel(people,screenSize, players[0], cli);

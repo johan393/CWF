@@ -19,5 +19,5 @@ public abstract class GamePanel extends JPanel {
     public abstract JPanel getScoreList();
     public Image bg;
     public Hand[] hand;
-    public Trick trick;
+    public Center center;
 }

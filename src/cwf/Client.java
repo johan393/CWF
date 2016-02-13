@@ -66,6 +66,7 @@ public class Client extends JPanel{
     }
     
     public Socket[] connect() {
+        this.repaint();
         Socket[] rsock = new Socket[1];
         
         try{
