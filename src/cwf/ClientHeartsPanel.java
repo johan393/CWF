@@ -318,13 +318,16 @@ public class ClientHeartsPanel extends GamePanel {
        Card[][] hands = new Card[4][13];
        try{
        for(int i = 0; i<people; i++){
+           if(i+(4-playerpos)%4!=0){
            for(int j = 0; j<13; j++){
                buf = in.readLine();
                temp = buf.split(":");
                if(temp[0].equals("13")){
                    temp[0] = "0";
                }
+               System.out.println(j);System.out.println("  " + i); System.out.println(temp.length);
                hands[i][j] = new Card(Integer.parseInt(temp[1]),Integer.parseInt(temp[0]) );
+           }
            }
        }
        this.remove(hand[1]);
@@ -339,6 +342,7 @@ public class ClientHeartsPanel extends GamePanel {
        }
        catch(Exception e){
            System.out.println("cant read in deal after pass");
+           e.printStackTrace();
        }
 
     }
