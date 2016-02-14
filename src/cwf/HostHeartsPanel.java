@@ -770,7 +770,7 @@ public void displayScores(){
             for(int j=0;j<outs.length;j++){
                         outs[j].println("p");
                         outs[j].println(person);
-                        outs[j].println(playercard.value + ":" + playercard.suit);
+                        outs[j].println(c.value + ":" + c.suit);
             }
             trick.playCard(c, person);
             hand[person].playCard(legalMoves.get(p));

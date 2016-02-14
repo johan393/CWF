@@ -411,7 +411,7 @@ public class ClientHeartsPanel extends GamePanel {
                     buf = in.readLine();
                     temp = buf.split(":");
                     hand[player].playCard(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
-                    center.playCard(new Card(Integer.parseInt(temp[1]),Integer.parseInt(temp[0])),player);
+                    center.playCard(new Card(Integer.parseInt(temp[0]),Integer.parseInt(temp[1])),(player+(4-playerpos))%4);
                 }
                 else if(buf.equals("t")){//trick was taken
                      System.out.println("rcvd t");
