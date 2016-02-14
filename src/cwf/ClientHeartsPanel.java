@@ -335,9 +335,9 @@ public class ClientHeartsPanel extends GamePanel {
        this.remove(hand[1]);
        this.remove(hand[2]);
        this.remove(hand[3]);
-       hand[1]=new Hand(hands[(1+playerpos)%4], 'p');//l
-       hand[2]=new Hand(hands[(2+playerpos)%4], 'p');//a
-       hand[3]=new Hand(hands[(3+playerpos)%4], 'p');//r
+       hand[1]=new Hand(hands[(1+playerpos)%4], 'l');//l
+       hand[2]=new Hand(hands[(2+playerpos)%4], 'a');//a
+       hand[3]=new Hand(hands[(3+playerpos)%4], 'r');//r
        this.add(hand[1], BorderLayout.WEST);
        this.add(hand[2], BorderLayout.NORTH);
        this.add(hand[3], BorderLayout.EAST);
