@@ -640,15 +640,16 @@ public void proceed(){
                         heartsbroken=true;
                     }
                     
-                    trick.playCard(playercard, 0);
-                    hand[0].playCard(playercard);
-                    center.playCard(playercard,0);
+                    
                     for(int j=0;j<outs.length;j++){
                         outs[j].println("p");
                         outs[j].println(0);
                         outs[j].println(playercard.value + ":" + playercard.suit);
                     }
                     person=(person+1)%people;
+                    trick.playCard(playercard, 0);
+                    hand[0].playCard(playercard);
+                    center.playCard(playercard,0);
                     
                 }
             }
@@ -765,14 +766,15 @@ public void displayScores(){
             if(c.suit == 3){
                 heartsbroken=true;
             }
-            trick.playCard(c, person);
-            hand[person].playCard(legalMoves.get(p));
-            center.playCard(c, person);
+            
             for(int j=0;j<outs.length;j++){
                         outs[j].println("p");
                         outs[j].println(person);
                         outs[j].println(playercard.value + ":" + playercard.suit);
             }
+            trick.playCard(c, person);
+            hand[person].playCard(legalMoves.get(p));
+            center.playCard(c, person);
             
         }
         catch(Exception e){
