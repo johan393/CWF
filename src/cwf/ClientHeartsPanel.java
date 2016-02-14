@@ -213,6 +213,7 @@ public class ClientHeartsPanel extends GamePanel {
             passDirection = buf;
             pass();
         }
+        proceed();
     }
     
     public void pass(){
@@ -391,6 +392,7 @@ public class ClientHeartsPanel extends GamePanel {
             try{
                 buf = in.readLine();
                 if(buf.equals("g")){//it is the player's turn
+                    System.out.println("rcvd g");
                     try{
                         synchronized(lock){
                             lock.wait();
@@ -403,6 +405,7 @@ public class ClientHeartsPanel extends GamePanel {
                     out.println(playercard.value + ":" + playercard.suit);
                 }
                 else if(buf.equals("p")){//card played, time to show the user
+                     System.out.println("rcvd p");
                     buf = in.readLine();
                     player = Integer.parseInt(buf);
                     buf = in.readLine();
@@ -411,11 +414,13 @@ public class ClientHeartsPanel extends GamePanel {
                     center.playCard(new Card(Integer.parseInt(temp[1]),Integer.parseInt(temp[0])),player);
                 }
                 else if(buf.equals("t")){//trick was taken
+                     System.out.println("rcvd t");
                     buf = in.readLine();
                     player = Integer.parseInt(buf);
                     center.takeTrick(player);
                 }
                 else if(buf.equals("d")){//end of round
+                     System.out.println("rcvd d");
                     doRoundEnd();
                 }
             }
