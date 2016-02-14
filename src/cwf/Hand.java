@@ -235,20 +235,13 @@ public class Hand extends javax.swing.JPanel{
         this.revalidate();
         this.repaint();
     }
-    
+   
     public void playCard(int value, int suit){
         for(int i = 0;i<cards.length; i++){
             if(cards[i]!=null && cards[i].value==value && cards[i].suit == suit){
-                this.remove(cards[i]);
-                cards[i] = null;
+                this.playCard(i);
             }
         }
-        if(this.getComponentCount()==0){
-            this.add(invisibleCard);
-            empty=true;
-        }
-        this.revalidate();
-        this.repaint();
     }
     
     public int getSelectedCount(){
