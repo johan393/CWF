@@ -279,8 +279,26 @@ public class ClientHeartsPanel extends GamePanel {
        for(int i = 0; i<3; i++){
                     received[i].select();
                     received[i].addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            //TODO ADD ACTION LISTENER TO PASSED CARDS
+                    public void actionPerformed(ActionEvent e) {
+                            if(passphase){
+                                if(((Card)e.getSource()).select){
+                                    ((Card)e.getSource()).deselect();
+                                }
+                            else{
+                                ((Card)e.getSource()).select();
+                            }
+                            }
+                            else{
+                                try{
+                                    synchronized(lock){
+                                        playercard = (Card) e.getSource();
+                                        lock.notify();
+                                    }
+                                }
+                                catch(Exception E){
+                                    System.out.println("Button failed to notify main thread");  
+                                }
+                            }
                         }});
                 }
        
@@ -303,6 +321,9 @@ public class ClientHeartsPanel extends GamePanel {
            for(int j = 0; j<13; j++){
                buf = in.readLine();
                temp = buf.split(":");
+               if(temp[0].equals("13")){
+                   temp[0] = "0";
+               }
                hands[i][j] = new Card(Integer.parseInt(temp[1]),Integer.parseInt(temp[0]) );
            }
        }
