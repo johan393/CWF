@@ -410,14 +410,14 @@ public class ClientHeartsPanel extends GamePanel {
                     player = Integer.parseInt(buf);
                     buf = in.readLine();
                     temp = buf.split(":");
-                    hand[player].playCard(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+                    hand[(player+(4-playerpos))%4].playCard(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
                     center.playCard(new Card(Integer.parseInt(temp[0]),Integer.parseInt(temp[1])),(player+(4-playerpos))%4);
                 }
                 else if(buf.equals("t")){//trick was taken
                      System.out.println("rcvd t");
                     buf = in.readLine();
                     player = Integer.parseInt(buf);
-                    center.takeTrick(player);
+                    center.takeTrick((player+(4-playerpos))%4);
                 }
                 else if(buf.equals("d")){//end of round
                      System.out.println("rcvd d");
