@@ -329,6 +329,9 @@ public class ClientHeartsPanel extends GamePanel {
                }
                else{
                     hands[i][j] = new Card(Integer.parseInt(temp[0]),Integer.parseInt(temp[1]) );
+                    if(temp[0].equals("0")){
+                        hands[i][j].value = 13;
+                    }
                }
            }
            }
@@ -403,6 +406,7 @@ public class ClientHeartsPanel extends GamePanel {
                         ex.printStackTrace();
                     }
                     out.println(playercard.value + ":" + playercard.suit);
+                    System.out.println("played" + playercard.loc);
                 }
                 else if(buf.equals("p")){//card played, time to show the user
                      System.out.println("rcvd p");
