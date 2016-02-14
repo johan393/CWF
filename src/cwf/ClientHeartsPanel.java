@@ -318,27 +318,30 @@ public class ClientHeartsPanel extends GamePanel {
        Card[][] hands = new Card[4][13];
        try{
        for(int i = 0; i<people; i++){
-           if(i+(4-playerpos)%4!=0){
+           if((i+(4-playerpos))%4!=0){
            for(int j = 0; j<13; j++){
                buf = in.readLine();
                temp = buf.split(":");
                if(temp[0].equals("13")){
-                   temp[0] = "0";
+                     hands[i][j] = new Card(0,Integer.parseInt(temp[1]) );
+                     hands[i][j].value=13;
                }
-               System.out.println(j);System.out.println("  " + i); System.out.println(temp.length);
-               hands[i][j] = new Card(Integer.parseInt(temp[1]),Integer.parseInt(temp[0]) );
+               else{
+                    hands[i][j] = new Card(Integer.parseInt(temp[1]),Integer.parseInt(temp[0]) );
+               }
            }
            }
        }
        this.remove(hand[1]);
        this.remove(hand[2]);
        this.remove(hand[3]);
-       hand[1]=new Hand(hands[1+(4-playerpos)%4], 'l');
-       hand[2]=new Hand(hands[2+(4-playerpos)%4], 'a');
-       hand[3]=new Hand(hands[3+(4-playerpos)%4], 'r');
+       hand[1]=new Hand(hands[(1+(4-playerpos))%4], 'p');//l
+       hand[2]=new Hand(hands[(2+(4-playerpos))%4], 'p');//a
+       hand[3]=new Hand(hands[(3+(4-playerpos))%4], 'p');//r
        this.add(hand[1], BorderLayout.WEST);
        this.add(hand[2], BorderLayout.NORTH);
        this.add(hand[3], BorderLayout.EAST);
+       this.revalidate();
        }
        catch(Exception e){
            System.out.println("cant read in deal after pass");

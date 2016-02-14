@@ -300,6 +300,11 @@ public class HostHeartsPanel extends GamePanel {
                             }
                         }});
                 }
+                for(int i = 0; i<3;i++){
+                    if(passcards[3][i].value==0){
+                        passcards[3][i].value = 13;
+                    }
+                }
                 hand[0].addCards(passcards[3]);
                 passDirection = "Right";
                 passbutton.setText("OK");
@@ -337,6 +342,11 @@ public class HostHeartsPanel extends GamePanel {
                             }
                         }});
                 }
+                for(int i = 0; i<3;i++){
+                    if(passcards[1][i].value==0){
+                        passcards[1][i].value = 13;
+                    }
+                }
                 hand[0].addCards(passcards[1]);
                 passDirection = "Across";
                 passbutton.setText("OK");
@@ -373,6 +383,11 @@ public class HostHeartsPanel extends GamePanel {
                                 }
                             }
                         }});
+                }
+                for(int i = 0; i<3;i++){
+                    if(passcards[2][i].value==0){
+                        passcards[2][i].value = 13;
+                    }
                 }
                 hand[0].addCards(passcards[2]);
                 passDirection = "K";
