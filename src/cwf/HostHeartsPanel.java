@@ -191,7 +191,12 @@ public class HostHeartsPanel extends GamePanel {
                 }
               }
             
-            
+            if(hand[0]!=null){
+            this.remove(hand[0]);
+            this.remove(hand[1]);
+            this.remove(hand[2]);
+            this.remove(hand[3]);
+            }
             hand[0]=new Hand(hands[0], 'p');
             hand[1]=new Hand(hands[1], 'l');
             hand[2]=new Hand(hands[2], 'a');
@@ -408,6 +413,9 @@ public class HostHeartsPanel extends GamePanel {
             for(int i = 0; i<people; i++){
                 for(int j = 0; j<13; j++){
                     if(!(k == i-1)){
+                    if(hand[i].cards[j]!=null && hand[i].cards[j].value==0){
+                        hand[i].cards[j].value = 13;
+                    }
                     outs[k].println(hand[i].cards[j].value + ":" + hand[i].cards[j].suit);
                     }
                 }

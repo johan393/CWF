@@ -187,7 +187,12 @@ public class ClientHeartsPanel extends GamePanel {
                 System.out.println("error reading in the dealt cards");
                 e.printStackTrace();
             }
-            
+            if(hand[0]!=null){
+            this.remove(hand[0]);
+            this.remove(hand[1]);
+            this.remove(hand[2]);
+            this.remove(hand[3]);
+            }
             hand[0]=new Hand(hands[0], 'p');
             hand[1]=new Hand(hands[1], 'l');
             hand[2]=new Hand(hands[2], 'a');
