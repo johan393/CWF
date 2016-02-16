@@ -219,6 +219,9 @@ public class ClientHeartsPanel extends GamePanel {
             passDirection = buf;
             pass();
         }
+        else{
+            passphase=false;
+        }
         proceed();
     }
     
