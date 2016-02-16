@@ -176,6 +176,7 @@ public class ClientHeartsPanel extends GamePanel {
                 temp = buf.split(":");
                 if(temp[0].equals("13")){
                     hands[0][i] = new Card(0, Integer.parseInt(temp[1]));
+                    hands[0][i].value = 13;
                 }
                 else{
                     hands[0][i] = new Card(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
